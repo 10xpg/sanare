@@ -1,0 +1,6 @@
+export * from './Drugs'
+export * from './DrugsSearch'
+export * from './DrugsHeader'
+export * from './DrugsListCard'
+export * from './DrugsDetail'
+export * from './DrugsDetailCard'
