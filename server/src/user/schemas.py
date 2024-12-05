@@ -1,13 +1,14 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
+from typing import Annotated
 
 
 # DTO for User Creation
 class UserBase(BaseModel):
-    username: str
-    first_name: str
-    last_name: str
+    username: Annotated[str, Field(min_length=5, max_length=10)]
+    first_name: Annotated[str, Field(min_length=1, max_length=100)]
+    last_name: Annotated[str, Field(min_length=1, max_length=100)]
     email: EmailStr
-    phone: str
+    phone: Annotated[str, Field(pattern="^\+?\d{3}-?\d{2,3}-?\d{3}-?\d{4}$|^\d{10}$")]
     password: str
 
 
@@ -23,4 +24,4 @@ class UserDisplay(BaseModel):
 # DTO for User Update
 class UserUpdate(BaseModel):
     email: EmailStr
-    phone: str
+    phone: Annotated[str, Field(pattern="^\+?\d{3}-?\d{2,3}-?\d{3}-?\d{4}$|^\d{10}$")]

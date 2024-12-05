@@ -1,5 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from user.schemas import UserBase, UserDisplay, UserUpdate
+from user.schemas import UserBase, UserUpdate
 from user.models import DbUser
 from fastapi import HTTPException, status
 from auth.utils import Hash

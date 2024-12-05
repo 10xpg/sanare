@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from user.models import DbUser
 from user.schemas import UserBase, UserDisplay, UserUpdate
 from user.services import UserService
 from database import get_db
@@ -8,7 +7,7 @@ from auth.jwt_utils import JWTUtils
 
 user_router = APIRouter(
     prefix="/user",
-    tags=["Users"],
+    tags=["Doctors"],
 )
 
 

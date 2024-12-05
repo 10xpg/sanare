@@ -1,10 +1,12 @@
 import logging
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import mongodb_uri
-
+from bson.binary import UuidRepresentation
 
 # MongoDB connection config
-client: AsyncIOMotorClient = AsyncIOMotorClient(mongodb_uri)
+client: AsyncIOMotorClient = AsyncIOMotorClient(
+    mongodb_uri, uuidRepresentation="standard"
+)
 logger = logging.getLogger("uvicorn.error")
 
 
