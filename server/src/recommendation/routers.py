@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile, File
 from recommendation.schemas import (
     PatientBase,
     DiagnosisBase,
@@ -14,6 +14,8 @@ from recommendation.services import (
 from database import get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from auth.jwt_utils import JWTUtils
+import shutil
+import os
 
 
 patient_router = APIRouter(
@@ -91,6 +93,21 @@ async def create_diagnosis(
     return await DiagnosisService(db).create_diagnosis(
         patient_id, doctor_id, vitals_id, request
     )
+
+
+@diagnosis_router.post(
+    "/files",
+)
+def get_files(files: list[UploadFile] = File(...)):
+    file_info = []
+    for file in files:
+        path = f"../files/{file.filename}"
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w+b") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        file_info.append({"filename": file.filename, "type": file.content_type})
+        file.file.close()
+    return file_info
 
 
 @diagnosis_router.get("/{diagnosis_id}", response_model=DiagnosisBase)

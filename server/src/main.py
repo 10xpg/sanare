@@ -19,15 +19,15 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Sanare API",
+    title="SANARE API",
     description="API for integrating traditional medicine into mainstream healthcare in Ghana.",
     version="1.0.0",
 )
 
 
-@app.get("/")
+@app.get("/", tags=["Welcome"])
 async def welcome():
-    return {"msg": "Hello, world"}
+    return {"msg": "Hello, Welcome to Sanare API"}
 
 
 app.include_router(auth_router)

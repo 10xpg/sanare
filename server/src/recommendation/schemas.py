@@ -1,17 +1,15 @@
 from pydantic import BaseModel, Field, EmailStr
 from recommendation.models import Sex, EmergencyContact, PulseRhythm, PulseStrength
-from user.utils import PyObjectId
-from datetime import date, datetime
-from typing import Any
-from bson import ObjectId
+from datetime import datetime
+from typing import Any, Annotated
 
 
 class PatientBase(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: Annotated[str, Field(min_length=1)]
+    last_name: Annotated[str, Field(min_length=1)]
     sex: Sex
     dob: datetime
-    phone: str
+    phone: Annotated[str, Field(pattern="^\+?\d{3}-?\d{2,3}-?\d{3}-?\d{4}$|^\d{10}$")]
     email: EmailStr
     address: str
     emergency_contacts: list[EmergencyContact]
@@ -19,16 +17,16 @@ class PatientBase(BaseModel):
 
 class VitalsBase(BaseModel):
     patient: str
-    weight: float
-    temperature: float
-    systolic_bp: float
-    diastolic_bp: float
-    heart_rate: int
+    weight: Annotated[float, Field(ge=0, le=610)]
+    temperature: Annotated[float, Field(ge=20, le=50)]
+    systolic_bp: Annotated[float, Field(ge=50, le=300)]
+    diastolic_bp: Annotated[float, Field(ge=20, le=200)]
+    heart_rate: Annotated[int, Field(ge=30, le=250)]
     pulse_rhythm: PulseRhythm
     pulse_strength: PulseStrength
-    respiratory_rate: int
+    respiratory_rate: Annotated[int, Field(ge=0, le=70)]
     breathing_difficulty: bool
-    oxygen_saturation: float
+    oxygen_saturation: Annotated[float, Field(ge=50, le=120)]
 
 
 class DiagnosisBase(BaseModel):
@@ -38,7 +36,6 @@ class DiagnosisBase(BaseModel):
     medical_history: str
     allergies: str
     symptoms: str
-    file_upload: Any
     current_medications: str
     notes: str
     condition: list[str]

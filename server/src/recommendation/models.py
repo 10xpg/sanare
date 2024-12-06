@@ -47,6 +47,7 @@ class PulseRhythm(str, Enum):
 class PulseStrength(str, Enum):
     weak = "weak"
     moderate = "moderate"
+    strong = "strong"
 
 
 class DbVitals(BaseModel):
@@ -82,7 +83,6 @@ class DbDiagnosis(BaseModel):
     allergies: str
     symptoms: str
     current_medications: str
-    file_upload: Any
     notes: str
     condition: list[str]
     created_at: Annotated[datetime, Field(default_factory=datetime.now)]
