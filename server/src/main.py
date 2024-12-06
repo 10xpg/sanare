@@ -18,7 +18,11 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI()
+app = FastAPI(
+    title="Sanare API",
+    description="API for integrating traditional medicine into mainstream healthcare in Ghana.",
+    version="1.0.0",
+)
 
 
 @app.get("/")

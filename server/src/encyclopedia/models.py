@@ -64,6 +64,6 @@ class DbTraditionalDrugs(BaseModel):
     )
     product_name: str
     active_ingredient: str | None
-    disease_indication: str | None
+    disease_indications: str | None
     scientific_literature_reference: str | None
     adverse_effects: str | None

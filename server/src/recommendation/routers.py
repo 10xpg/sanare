@@ -19,7 +19,7 @@ from auth.jwt_utils import JWTUtils
 patient_router = APIRouter(
     prefix="/patient",
     tags=["Patients"],
-    # dependencies=[Depends(JWTUtils.get_current_user)],
+    dependencies=[Depends(JWTUtils.get_current_user)],
 )
 
 
@@ -54,7 +54,7 @@ async def update_patient(
 vitals_router = APIRouter(
     prefix="/vitals",
     tags=["Vitals"],
-    # dependencies=[Depends(JWTUtils.get_current_user)],
+    dependencies=[Depends(JWTUtils.get_current_user)],
 )
 
 
@@ -76,7 +76,7 @@ async def get_vitals_by_object_id(
 diagnosis_router = APIRouter(
     prefix="/diagnosis",
     tags=["Diagnosis"],
-    # dependencies=[Depends(JWTUtils.get_current_user)],
+    dependencies=[Depends(JWTUtils.get_current_user)],
 )
 
 
@@ -104,7 +104,7 @@ async def get_diagnosis_by_object_id(
 report_router = APIRouter(
     prefix="/report",
     tags=["Reports"],
-    # dependencies=[Depends(JWTUtils.get_current_user)],
+    dependencies=[Depends(JWTUtils.get_current_user)],
 )
 
 
