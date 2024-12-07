@@ -19,6 +19,13 @@ class UserDisplay(BaseModel):
     last_name: str
     email: EmailStr
     phone: str
+    is_email_verified: bool
+
+
+# DTO for Created User Display
+class CreatedUserDisplay(BaseModel):
+    message: str
+    user: UserDisplay
 
 
 # DTO for User Update

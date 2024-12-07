@@ -8,6 +8,7 @@ from user.utils import PyObjectId
 class Roles(str, Enum):
     admin = "admin"
     regular = "regular"
+    superuser = "superuser"
 
 
 # User model
@@ -23,7 +24,6 @@ class DbUser(BaseModel):
     hashed_password: str
     role: Roles = Roles.regular
     is_email_verified: bool | None = False
-    verification_token: str | None = None
     joined_at: datetime = Field(default_factory=datetime.now)
     last_login: datetime | None = None
     is_active: bool | None = False

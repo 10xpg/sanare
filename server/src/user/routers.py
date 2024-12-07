@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from user.schemas import UserBase, UserDisplay, UserUpdate
+from user.schemas import UserBase, UserDisplay, UserUpdate, CreatedUserDisplay
 from user.services import UserService
 from database import get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -11,7 +11,9 @@ user_router = APIRouter(
 )
 
 
-@user_router.post("/register", response_model=UserDisplay, tags=["Authentication"])
+@user_router.post(
+    "/register", response_model=CreatedUserDisplay, tags=["Authentication"]
+)
 async def create_user(request: UserBase, db: AsyncIOMotorDatabase = Depends(get_db)):
     return await UserService(db).create_user(request)
 

@@ -1,9 +1,13 @@
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from auth.utils import Hash
+from auth.utils import Hash, EmailVerification
 from auth.jwt_utils import JWTUtils
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from user.utils import ConvertId
 from fastapi import HTTPException, status
+from auth.models import EmailModel
+from mail import create_message, mail
+from auth.models import EmailModel
+from pymongo import ReturnDocument
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -33,4 +37,47 @@ class AuthService:
             "token_type": "bearer",
             "object_id": ConvertId.to_StringId(user["_id"]),
             "user_id": user["username"],
+        }
+
+    async def verify_user(self, token: str):
+        token_data = EmailVerification.decode_url_safe_token(token)
+        user_email = token_data.get("email")
+        if not user_email:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={
+                    "detail": f"An error occurred! No email address '{user_email}' exists! Email Verification Failed"
+                },
+            )
+        user = await self.collection.find_one_and_update(
+            {"email": user_email},
+            {
+                "$set": {
+                    "is_email_verified": True,
+                }
+            },
+            return_document=ReturnDocument.AFTER,
+        )
+        return {
+            "message": "Email Verification Successful ✅",
+            "user_status": user,
+        }
+
+
+class AuthMailService:
+    def __init__(self):
+        pass
+
+    async def send_mail(request: EmailModel):
+        emails = request.addresses
+        html = "<h1>Welcome to Sanare</h1>"
+        message = create_message(
+            recipients=emails,
+            subject="Welcome",
+            body=html,
+        )
+
+        await mail.send_message(message)
+        return {
+            "detail": "Email sent successfully",
         }

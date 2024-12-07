@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from user.schemas import UserDisplay
 
 
 class TokenDisplay(BaseModel):
@@ -10,3 +11,8 @@ class TokenDisplay(BaseModel):
 
 class TokenData(BaseModel):
     user_id: str | None
+
+
+class EmailVerificationDisplay(BaseModel):
+    message: str
+    user_status: UserDisplay
