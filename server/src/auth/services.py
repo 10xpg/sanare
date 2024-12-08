@@ -5,10 +5,18 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from user.utils import ConvertId
 from fastapi import HTTPException, status
 from auth.models import EmailModel
+from auth.schemas import PasswordResetBase, PasswordResetConfirmBase
 from mail import create_message, mail
-from auth.models import EmailModel
 from pymongo import ReturnDocument
 from datetime import datetime
+import os
+from dotenv import load_dotenv
+from fastapi.responses import JSONResponse
+
+
+load_dotenv()
+DOMAIN = os.getenv("DOMAIN")
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 ACCESS_TOKEN_EXPIRES_MINUTES = 30
@@ -65,6 +73,61 @@ class AuthService:
         )
         return {
             "message": "Email Verification Successful ✅",
+            "user_status": user,
+        }
+
+    async def reset_password_request(self, request: PasswordResetBase):
+        email_address = request.email
+        token = EmailVerification.create_url_safe_token({"email": email_address})
+
+        link = f"http://{DOMAIN}/auth/password-reset-confirm/{token}"
+        html_message = f""""
+        <h1>Reset your Password</h1>
+        <p>Please click this <a href="{link}">link</a> to reset your password</p>
+        """
+
+        message = create_message(
+            recipients=[email_address],
+            subject="Reset your password",
+            body=html_message,
+        )
+        await mail.send_message(message)
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "message": "Please check your mailbox for instructions to reset your password"
+            },
+        )
+
+    async def reset_password(self, token: str, request: PasswordResetConfirmBase):
+        new_password = request.new_password
+        confirm_password = request.confirm_new_password
+        if new_password != confirm_password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail={"detail": "Passwords do not match"},
+            )
+
+        token_data = EmailVerification.decode_url_safe_token(token)
+        user_email = token_data.get("email")
+        if not user_email:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={
+                    "detail": f"An error occurred! No email address '{user_email}' exists! Aborting Password Reset..."
+                },
+            )
+        user = await self.collection.find_one_and_update(
+            {"email": user_email},
+            {
+                "$set": {
+                    "hashed_password": Hash.bcrypt(new_password),
+                }
+            },
+            return_document=ReturnDocument.AFTER,
+        )
+        return {
+            "message": "Password Reset Successful ✅",
             "user_status": user,
         }
 
