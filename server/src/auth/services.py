@@ -8,7 +8,7 @@ from auth.models import EmailModel
 from mail import create_message, mail
 from auth.models import EmailModel
 from pymongo import ReturnDocument
-
+from datetime import datetime
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 ACCESS_TOKEN_EXPIRES_MINUTES = 30
@@ -32,6 +32,11 @@ class AuthService:
             )
 
         access_token = JWTUtils.create_access_token(data={"sub": user["username"]})
+        await self.collection.update_one(
+            {"username": credentials.username},
+            {"$set": {"last_login": datetime.now(), "is_active": True}},
+        )
+
         return {
             "access_token": access_token,
             "token_type": "bearer",
