@@ -1,5 +1,6 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Annotated
+import re
 
 
 # DTO for User Creation
@@ -10,6 +11,16 @@ class UserBase(BaseModel):
     email: EmailStr
     phone: Annotated[str, Field(pattern="^\+?\d{3}-?\d{2,3}-?\d{3}-?\d{4}$|^\d{10}$")]
     password: str
+
+    @field_validator("password")
+    def validate_password(cls, v: str):
+        if not re.match(
+            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", v
+        ):
+            raise ValueError(
+                "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+            )
+        return v
 
 
 # DTO for User Display

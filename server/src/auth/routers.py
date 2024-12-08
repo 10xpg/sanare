@@ -25,14 +25,4 @@ async def send_mail(request: EmailModel):
 
 @auth_router.get("/verify/{token}", response_model=EmailVerificationDisplay)
 async def verify_user(token: str, db: AsyncIOMotorDatabase = Depends(get_db)):
-    # token_data = EmailVerification.decode_url_safe_token(token)
-    # user_email = token_data.get("email")
-    # if not user_email:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_404_NOT_FOUND,
-    #         detail={
-    #             "detail": f"An error occurred! No email address '{user_email}' exists!"
-    #         },
-    #     )
-    # user = UserService(db).get_user_by_email(user_email)
     return await AuthService(db).verify_user(token)
