@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from user.schemas import UserDisplay
 
 
@@ -13,6 +13,15 @@ class TokenData(BaseModel):
     user_id: str | None
 
 
-class EmailVerificationDisplay(BaseModel):
+class VerificationDisplay(BaseModel):
     message: str
     user_status: UserDisplay
+
+
+class PasswordResetBase(BaseModel):
+    email: EmailStr
+
+
+class PasswordResetConfirmBase(BaseModel):
+    new_password: str
+    confirm_new_password: str
