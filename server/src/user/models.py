@@ -28,6 +28,7 @@ class DbUser(BaseModel):
     last_login: datetime | None = None
     is_active: bool | None = False
     is_admin: bool | None = False
+    updated_at: datetime | None = None
 
     class Config:
         populate_by_name = True
