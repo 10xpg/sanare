@@ -17,3 +17,9 @@ __pycache__/
 
 # OS-specific files
 .DS_Store
+
+# Data for Orthodox & Traditional medicines
+drugstore/
+
+# Uploaded diagnostics files
+files/

@@ -99,8 +99,42 @@ class DbReport(BaseModel):
     patient: PyObjectId
     doctor: PyObjectId
     diagnosis: PyObjectId
-    selected_orthodox_drug: list[PyObjectId] = []
-    selected_traditional_drug: list[PyObjectId] = []
+    selected_orthodox_drug: list[str] = []
+    selected_traditional_drug: list[str] = []
+    created_at: Annotated[datetime, Field(default_factory=datetime.now)]
+
+    class Config:
+        json_encoders = {ObjectId: str}
+
+
+class DbRecommendation(BaseModel):
+    id: PyObjectId | None = Field(
+        default_factory=PyObjectId, alias="_id", title="recommendation_pk"
+    )
+    doctor: PyObjectId
+    patient: PyObjectId
+    vitals: PyObjectId
+    diagnosis: PyObjectId
+    recommended_orthodox_drug: list[str] = []
+    recommended_by_doctor: list[str] = []
+    recommended_traditional_drug: list[str] = []
+    created_at: Annotated[datetime, Field(default_factory=datetime.now)]
+
+    class Config:
+        json_encoders = {ObjectId: str}
+
+
+class DbPredictedDrug(BaseModel):
+    id: PyObjectId | None = Field(
+        default_factory=PyObjectId, alias="_id", title="predicted_drug_pk"
+    )
+    patient: PyObjectId
+    doctor: PyObjectId
+    diagnosis: PyObjectId
+    drug: str
+    category: str
+    effectiveness: str
+    side_effect: str
     created_at: Annotated[datetime, Field(default_factory=datetime.now)]
 
     class Config:

@@ -4,12 +4,15 @@ from recommendation.schemas import (
     DiagnosisBase,
     VitalsBase,
     ReportBase,
+    RecommendationBase,
+    TraditionalDrugDisplay,
 )
 from recommendation.services import (
     PatientService,
     VitalsService,
     DiagnosisService,
     ReportService,
+    RecommendationService,
 )
 from database import get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -151,3 +154,54 @@ async def get_report_by_object_id(
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
     return await ReportService(db).get_report_by_ObjectId(report_id)
+
+
+recommendation_router = APIRouter(
+    prefix="/recommendation",
+    tags=["Recommendation"],
+    dependencies=[Depends(JWTUtils.get_current_user)],
+)
+
+
+@recommendation_router.post("/", response_model=RecommendationBase)
+async def recommend_drugs(
+    patient_id: str,
+    doctor_id: str,
+    vitals_id: str,
+    diagnosis_id: str,
+    request: RecommendationBase,
+    db: AsyncIOMotorDatabase = Depends(get_db),
+):
+    return await RecommendationService(db).create_recommendation(
+        patient_id,
+        doctor_id,
+        vitals_id,
+        diagnosis_id,
+        request,
+    )
+
+
+@recommendation_router.get("/{recommendation_id}", response_model=RecommendationBase)
+async def get_recommendation_by_object_id(
+    recommendation_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_db),
+):
+    return await RecommendationService(db).get_recommendation_by_ObjectId(
+        recommendation_id
+    )
+
+
+@recommendation_router.get(
+    "/traditional-drugs/{condition}",
+    response_model=list[TraditionalDrugDisplay],
+)
+async def get_traditional_drugs(
+    condition: str,
+    db: AsyncIOMotorDatabase = Depends(get_db),
+):
+    return await RecommendationService(db).get_traditional_recommendations(condition)
+
+
+@recommendation_router.post("/orthodox-drugs/{condition}")
+async def get_orthodox_drugs(condition: str, age: int):
+    pass
