@@ -7,6 +7,7 @@ from recommendation.routers import (
     vitals_router,
     diagnosis_router,
     report_router,
+    recommendation_router,
 )
 from contextlib import asynccontextmanager
 from database import ping_mongodb_server, get_db
@@ -35,5 +36,6 @@ app.include_router(user_router)
 app.include_router(patient_router)
 app.include_router(vitals_router)
 app.include_router(diagnosis_router)
+app.include_router(recommendation_router)
 app.include_router(report_router)
 app.include_router(encyclopedia_router)

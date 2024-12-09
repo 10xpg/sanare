@@ -71,8 +71,9 @@ export const VitalsForm = () => {
               <option value='' disabled>
                 Select
               </option>
-              <option value='strong'>Strong</option>
               <option value='weak'>Weak</option>
+              <option value='moderate'>Moderate</option>
+              <option value='strong'>Strong</option>
             </select>
           </label>
         </div>
@@ -81,7 +82,7 @@ export const VitalsForm = () => {
             Respiratory Rate
             <br />
             <input
-              type='email'
+              type='text'
               required
               placeholder='breaths/min'
               className='w-full h-10 rounded placeholder-[#999EA4] text-black p-3 outline-black'
@@ -104,8 +105,8 @@ export const VitalsForm = () => {
               <option value='' disabled>
                 Select
               </option>
-              <option value='yes'>Yes</option>
-              <option value='no'>No</option>
+              <option value='true'>Yes</option>
+              <option value='false'>No</option>
             </select>
           </label>
         </div>
