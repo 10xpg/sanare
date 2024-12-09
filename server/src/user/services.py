@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import os
 from auth.utils import EmailVerification
 from mail import create_message, mail
+from datetime import datetime
 
 
 load_dotenv()
@@ -108,6 +109,7 @@ class UserService:
                 "$set": {
                     "email": request.email,
                     "phone": request.phone,
+                    "updated_at": datetime.now(),
                 }
             },
             return_document=ReturnDocument.AFTER,
