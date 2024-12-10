@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile, File, status
 from recommendation.schemas import (
     PatientBase,
     DiagnosisBase,
@@ -25,7 +25,9 @@ patient_router = APIRouter(
 )
 
 
-@patient_router.post("/", response_model=PatientBase)
+@patient_router.post(
+    "/", response_model=PatientBase, status_code=status.HTTP_201_CREATED
+)
 async def create_patient(
     request: PatientBase, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
@@ -44,7 +46,9 @@ async def get_patient_by_ObjectId(
     return await PatientService(db).get_patient_by_ObjectId(patient_id)
 
 
-@patient_router.put("/{patient_id}", response_model=PatientBase)
+@patient_router.put(
+    "/{patient_id}", response_model=PatientBase, status_code=status.HTTP_202_ACCEPTED
+)
 async def update_patient(
     patient_id: str,
     request: PatientBase,
@@ -60,9 +64,11 @@ vitals_router = APIRouter(
 )
 
 
-@vitals_router.post("/", response_model=VitalsBase)
+@vitals_router.post("/", response_model=VitalsBase, status_code=status.HTTP_201_CREATED)
 async def create_vitals(
-    patient_id: str, request: VitalsBase, db: AsyncIOMotorDatabase = Depends(get_db)
+    patient_id: str,
+    request: VitalsBase,
+    db: AsyncIOMotorDatabase = Depends(get_db),
 ):
     return await VitalsService(db).create_vitals(patient_id, request)
 
@@ -82,7 +88,9 @@ diagnosis_router = APIRouter(
 )
 
 
-@diagnosis_router.post("/", response_model=DiagnosisBase)
+@diagnosis_router.post(
+    "/", response_model=DiagnosisBase, status_code=status.HTTP_201_CREATED
+)
 async def create_diagnosis(
     patient_id: str,
     doctor_id: str,
@@ -125,7 +133,7 @@ report_router = APIRouter(
 )
 
 
-@report_router.post("/", response_model=ReportBase)
+@report_router.post("/", response_model=ReportBase, status_code=status.HTTP_201_CREATED)
 async def create_report(
     patient_id: str,
     doctor_id: str,

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from user.schemas import UserBase, UserDisplay, UserUpdate, CreatedUserDisplay
 from user.services import UserService
 from database import get_db
@@ -12,7 +12,10 @@ user_router = APIRouter(
 
 
 @user_router.post(
-    "/register", response_model=CreatedUserDisplay, tags=["Authentication"]
+    "/register",
+    response_model=CreatedUserDisplay,
+    tags=["Authentication"],
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_user(request: UserBase, db: AsyncIOMotorDatabase = Depends(get_db)):
     return await UserService(db).create_user(request)
@@ -38,7 +41,9 @@ async def get_user_by_ObjectId(
     return await UserService(db).get_user_by_ObjectId(_id)
 
 
-@user_router.put("/{user_id}", response_model=UserDisplay)
+@user_router.put(
+    "/{user_id}", response_model=UserDisplay, status_code=status.HTTP_202_ACCEPTED
+)
 async def update_user(
     user_id: str,
     request: UserUpdate,

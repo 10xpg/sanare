@@ -12,6 +12,7 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from fastapi.responses import JSONResponse
+from tasks import send_email
 
 
 load_dotenv()
@@ -86,12 +87,11 @@ class AuthService:
         <p>Please click this <a href="{link}">link</a> to reset your password</p>
         """
 
-        message = create_message(
-            recipients=[email_address],
-            subject="Reset your password",
-            body=html_message,
-        )
-        await mail.send_message(message)
+        recipients = [email_address]
+        subject = "Reset your password"
+        body = html_message
+
+        send_email.delay(recipients, subject, body)
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={
@@ -138,14 +138,16 @@ class AuthMailService:
 
     async def send_mail(request: EmailModel):
         emails = request.addresses
+        subject = "Welcome to Sanare"
         html = "<h1>Welcome to Sanare</h1>"
+
         message = create_message(
             recipients=emails,
-            subject="Welcome",
+            subject=subject,
             body=html,
         )
 
-        await mail.send_message(message)
+        send_email.delay(emails, subject, html)
         return {
-            "detail": "Email sent successfully",
+            "message": "Email sent successfully",
         }
