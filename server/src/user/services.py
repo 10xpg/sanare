@@ -8,7 +8,7 @@ from pymongo import ReturnDocument
 from dotenv import load_dotenv
 import os
 from auth.utils import EmailVerification
-from mail import create_message, mail
+from tasks import send_email
 from datetime import datetime
 
 
@@ -45,20 +45,17 @@ class UserService:
         ################################################################################################
         # Email Verification
         token = EmailVerification.create_url_safe_token({"email": user_base["email"]})
-
         link = f"http://{DOMAIN}/auth/verify/{token}"
+
+        recipients = [user_base["email"]]
+        subject = "Verify your email account"
         html_message = f""""
         <h1>Verify your Email</h1>
         <p>Please click this <a href="{link}">link</a> to verify your email</p>
         """
 
-        message = create_message(
-            recipients=[user_base["email"]],
-            subject="Verify your Email",
-            body=html_message,
-        )
-        await mail.send_message(message)
-        ################################################################################################
+        send_email.delay(recipients, subject, html_message)
+        # ################################################################################################
 
         if not created_user:
             raise HTTPException(
