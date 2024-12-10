@@ -6,6 +6,7 @@ from pydantic_core import core_schema
 
 # Converts ObjectId to string and vise versa
 class ConvertId:
+    @staticmethod
     def to_ObjectId(id: str):
         try:
             return ObjectId(id)
@@ -15,6 +16,7 @@ class ConvertId:
                 detail={"detail": f"User with ObjectId '{id}' does not exist"},
             )
 
+    @staticmethod
     def to_StringId(id: ObjectId):
         return str(id)
 

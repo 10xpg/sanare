@@ -20,10 +20,12 @@ class Hash:
 
 
 class EmailVerification:
+    @staticmethod
     def create_url_safe_token(data: dict):
         token = serializer.dumps(data)
         return token
 
+    @staticmethod
     def decode_url_safe_token(token: str):
         try:
             token_data = serializer.loads(token)

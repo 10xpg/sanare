@@ -4,11 +4,13 @@ from encyclopedia.services import EncyclopediaService
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from database import get_db
 from typing import Annotated
+from auth.jwt_utils import is_verified
 
 
 encyclopedia_router = APIRouter(
     prefix="/encyclopedia",
     tags=["Encyclopedia"],
+    dependencies=[Depends(is_verified)],
 )
 
 

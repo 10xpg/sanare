@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from user.utils import ConvertId
 from fastapi import HTTPException, status
 from auth.models import EmailModel
-from auth.schemas import PasswordResetBase, PasswordResetConfirmBase
+from auth.schemas import PasswordResetBase, PasswordResetConfirmBase, TokenDisplay
 from mail import create_message, mail
 from pymongo import ReturnDocument
 from datetime import datetime
@@ -13,6 +13,7 @@ import os
 from dotenv import load_dotenv
 from fastapi.responses import JSONResponse
 from tasks import send_email
+from user.models import Roles
 
 
 load_dotenv()
@@ -40,7 +41,13 @@ class AuthService:
                 detail={"detail": "Incorrect password"},
             )
 
-        access_token = JWTUtils.create_access_token(data={"sub": user["username"]})
+        access_token = JWTUtils.create_access_token(
+            data={
+                "sub": user["username"],
+                "role": user["role"],
+                "is_verified": user["is_email_verified"],
+            }
+        )
         await self.collection.update_one(
             {"username": credentials.username},
             {"$set": {"last_login": datetime.now(), "is_active": True}},
@@ -51,6 +58,8 @@ class AuthService:
             "token_type": "bearer",
             "object_id": ConvertId.to_StringId(user["_id"]),
             "user_id": user["username"],
+            "role": user["role"],
+            "is_verified": user["is_email_verified"],
         }
 
     async def verify_user(self, token: str):
@@ -136,6 +145,7 @@ class AuthMailService:
     def __init__(self):
         pass
 
+    @staticmethod
     async def send_mail(request: EmailModel):
         emails = request.addresses
         subject = "Welcome to Sanare"

@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from user.models import Roles
 from user.schemas import UserDisplay
 
 
@@ -7,6 +8,8 @@ class TokenDisplay(BaseModel):
     token_type: str
     object_id: str
     user_id: str
+    role: Roles
+    is_verified: bool
 
 
 class TokenData(BaseModel):

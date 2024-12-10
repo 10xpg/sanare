@@ -11,6 +11,7 @@ from auth.schemas import (
 )
 from auth.models import EmailModel
 from pydantic import EmailStr
+from auth.jwt_utils import JWTUtils
 
 
 auth_router = APIRouter(prefix="/auth", tags=["Authentication"])

@@ -3,11 +3,12 @@ from user.schemas import UserBase, UserDisplay, UserUpdate, CreatedUserDisplay
 from user.services import UserService
 from database import get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from auth.jwt_utils import JWTUtils
+from auth.jwt_utils import JWTUtils, admin_required, is_verified
 
 user_router = APIRouter(
     prefix="/user",
     tags=["Doctors"],
+    dependencies=[],
 )
 
 
@@ -21,10 +22,15 @@ async def create_user(request: UserBase, db: AsyncIOMotorDatabase = Depends(get_
     return await UserService(db).create_user(request)
 
 
-@user_router.get("/", response_model=list[UserDisplay])
+@user_router.get(
+    "/",
+    response_model=list[UserDisplay],
+)
 async def get_all_users(
     db: AsyncIOMotorDatabase = Depends(get_db),
     current_user: UserBase = Depends(JWTUtils.get_current_user),
+    payload: dict = Depends(admin_required),
+    is_verified_only: bool = Depends(is_verified),
 ):
     return await UserService(db).get_all_users()
 
@@ -37,6 +43,7 @@ async def get_user_by_ObjectId(
     _id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
     current_user: UserBase = Depends(JWTUtils.get_current_user),
+    is_verified_only: bool = Depends(is_verified),
 ):
     return await UserService(db).get_user_by_ObjectId(_id)
 
@@ -49,6 +56,7 @@ async def update_user(
     request: UserUpdate,
     db: AsyncIOMotorDatabase = Depends(get_db),
     current_user: UserBase = Depends(JWTUtils.get_current_user),
+    is_verified_only: bool = Depends(is_verified),
 ):
     return await UserService(db).update_user(user_id, request)
 
@@ -58,5 +66,6 @@ async def delete_user(
     user_id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
     current_user: UserBase = Depends(JWTUtils.get_current_user),
+    is_verified_only: bool = Depends(is_verified),
 ):
     return await UserService(db).delete_user(user_id)
