@@ -18,6 +18,7 @@ class JWTUtils:
     def __init__(self):
         pass
 
+    @staticmethod
     def create_access_token(data: dict, expires_delta: timedelta | None = None):
         to_encode = data.copy()
         if expires_delta:
@@ -28,6 +29,7 @@ class JWTUtils:
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
 
+    @staticmethod
     def get_current_user(
         token: str = Depends(oauth2_scheme), db: AsyncIOMotorDatabase = Depends(get_db)
     ):
@@ -36,6 +38,7 @@ class JWTUtils:
             detail={"detail": "Could not validate credentials"},
             headers={"WWW-Authenticate": "Bearer"},
         )
+
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             user_id: str = payload.get("sub")  # retrieve username from token
@@ -49,3 +52,27 @@ class JWTUtils:
         if user is None:
             raise credentials_exception
         return user
+
+
+def admin_required(token: str = Depends(oauth2_scheme)):
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    if payload.get("role") != "admin" and payload.get("role") != "superuser":
+        raise HTTPException(
+            status_code=403,
+            detail={"Access Denied": "Admin privileges required for this action!"},
+        )
+    return payload
+
+
+def is_verified(token: str = Depends(oauth2_scheme)):
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+
+    if payload.get("role") == "superuser":
+        return payload
+
+    if payload.get("is_verified") is False:
+        raise HTTPException(
+            status_code=403,
+            detail={"Access Denied": "Verify your email to activate your account"},
+        )
+    return payload
