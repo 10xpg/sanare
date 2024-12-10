@@ -20,9 +20,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="SANARE API",
-    description="API for integrating traditional medicine into mainstream healthcare in Ghana.",
+    title="SANARE",
+    summary="API for integrating traditional medicine into mainstream healthcare in Ghana.",
     version="1.0.0",
+    contact={
+        "Developer": "pdg",
+        "email": "gbezehp@gmail.com",
+        "phone": "+233 543002078",
+    },
 )
 
 
