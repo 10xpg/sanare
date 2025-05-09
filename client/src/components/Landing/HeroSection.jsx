@@ -5,9 +5,6 @@ import { Link } from 'react-router-dom'
 export const HeroSection = () => {
   return (
     <div className='bg-black text-white text-center font-mono font-normal flex flex-col justify-around py-10'>
-      <div className='text-4xl pt-36'>
-        Welcome to <span className='italic uppercase'>&#39;Sanare&#39;</span>
-      </div>
       <div className='text-3xl py-10'>Empowering Clinicians with Intelligent Drug Recommendations</div>
       <div className='text-2xl py-10 px-40 font-light font-sans italic tracking-wide'>
         Streamline your prescribing process with our advanced AI-driven platform. Access personalized medication suggestions, and
