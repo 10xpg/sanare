@@ -49,6 +49,11 @@ class ReportBase(BaseModel):
     selected_traditional_drug: list[str] = []
 
 
+class ReportRes(ReportBase):
+    id: str = Field(alias="_id")
+    created_at: datetime
+
+
 class RecommendationBase(BaseModel):
     doctor: str
     patient: str

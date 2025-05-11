@@ -28,9 +28,9 @@ async def create_user(request: UserBase, db: AsyncIOMotorDatabase = Depends(get_
 )
 async def get_all_users(
     db: AsyncIOMotorDatabase = Depends(get_db),
-    current_user: UserBase = Depends(JWTUtils.get_current_user),
-    payload: dict = Depends(admin_required),
-    is_verified_only: bool = Depends(is_verified),
+    # current_user: UserBase = Depends(JWTUtils.get_current_user),
+    # payload: dict = Depends(admin_required),
+    # is_verified_only: bool = Depends(is_verified),
 ):
     return await UserService(db).get_all_users()
 
@@ -42,8 +42,8 @@ async def get_all_users(
 async def get_user_by_ObjectId(
     _id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
-    current_user: UserBase = Depends(JWTUtils.get_current_user),
-    is_verified_only: bool = Depends(is_verified),
+    # current_user: UserBase = Depends(JWTUtils.get_current_user),
+    # is_verified_only: bool = Depends(is_verified),
 ):
     return await UserService(db).get_user_by_ObjectId(_id)
 
@@ -55,8 +55,8 @@ async def update_user(
     user_id: str,
     request: UserUpdate,
     db: AsyncIOMotorDatabase = Depends(get_db),
-    current_user: UserBase = Depends(JWTUtils.get_current_user),
-    is_verified_only: bool = Depends(is_verified),
+    # current_user: UserBase = Depends(JWTUtils.get_current_user),
+    # is_verified_only: bool = Depends(is_verified),
 ):
     return await UserService(db).update_user(user_id, request)
 
@@ -65,7 +65,7 @@ async def update_user(
 async def delete_user(
     user_id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
-    current_user: UserBase = Depends(JWTUtils.get_current_user),
-    is_verified_only: bool = Depends(is_verified),
+    # current_user: UserBase = Depends(JWTUtils.get_current_user),
+    # is_verified_only: bool = Depends(is_verified),
 ):
     return await UserService(db).delete_user(user_id)

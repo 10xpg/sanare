@@ -199,9 +199,12 @@ class ReportService:
     async def get_all_reports(self):
         reports = await self.collection.find().to_list(None)
         for report in reports:
+            report["_id"] = str(report["_id"])
             report["patient"] = str(report["patient"])
             report["doctor"] = str(report["doctor"])
             report["diagnosis"] = str(report["diagnosis"])
+            report["created_at"] = str(report["created_at"])
+
         return reports
 
     async def get_report_by_ObjectId(self, object_id: str):
@@ -213,6 +216,8 @@ class ReportService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"Report with ObjectId '{object_id}' not found"},
             )
+        report["_id"] = str(report["_id"])
+        report["created_at"] = str(report["created_at"])
         report["patient"] = str(report["patient"])
         report["doctor"] = str(report["doctor"])
         report["diagnosis"] = str(report["diagnosis"])

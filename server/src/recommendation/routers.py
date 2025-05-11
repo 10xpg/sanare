@@ -4,6 +4,7 @@ from recommendation.schemas import (
     DiagnosisBase,
     VitalsBase,
     ReportBase,
+    ReportRes,
     RecommendationBase,
     TraditionalDrugDisplay,
 )
@@ -24,7 +25,7 @@ import os
 patient_router = APIRouter(
     prefix="/patient",
     tags=["Patients"],
-    dependencies=[Depends(JWTUtils.get_current_user), Depends(is_verified)],
+    # dependencies=[Depends(JWTUtils.get_current_user), Depends(is_verified)],
 )
 
 
@@ -63,7 +64,7 @@ async def update_patient(
 vitals_router = APIRouter(
     prefix="/vitals",
     tags=["Vitals"],
-    dependencies=[Depends(JWTUtils.get_current_user), Depends(is_verified)],
+    # dependencies=[Depends(JWTUtils.get_current_user), Depends(is_verified)],
 )
 
 
@@ -87,7 +88,7 @@ async def get_vitals_by_object_id(
 diagnosis_router = APIRouter(
     prefix="/diagnosis",
     tags=["Diagnosis"],
-    dependencies=[Depends(JWTUtils.get_current_user), Depends(is_verified)],
+    # dependencies=[Depends(JWTUtils.get_current_user), Depends(is_verified)],
 )
 
 
@@ -132,7 +133,7 @@ async def get_diagnosis_by_object_id(
 report_router = APIRouter(
     prefix="/report",
     tags=["Reports"],
-    dependencies=[Depends(JWTUtils.get_current_user), Depends(is_verified)],
+    # dependencies=[Depends(JWTUtils.get_current_user), Depends(is_verified)],
 )
 
 
@@ -149,14 +150,14 @@ async def create_report(
     )
 
 
-@report_router.get("/all", response_model=list[ReportBase])
+@report_router.get("/all", response_model=list[ReportRes])
 async def get_all_reports(
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
     return await ReportService(db).get_all_reports()
 
 
-@report_router.get("/{report_id}", response_model=ReportBase)
+@report_router.get("/{report_id}", response_model=ReportRes)
 async def get_report_by_object_id(
     report_id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
@@ -167,7 +168,7 @@ async def get_report_by_object_id(
 recommendation_router = APIRouter(
     prefix="/recommendation",
     tags=["Recommendation"],
-    dependencies=[Depends(JWTUtils.get_current_user)],
+    # dependencies=[Depends(JWTUtils.get_current_user)],
 )
 
 
