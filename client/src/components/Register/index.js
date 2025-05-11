@@ -1,1 +1,1 @@
-export * from './RegiterForm'
+export * from './RegisterForm'

@@ -26,7 +26,7 @@ export default function App() {
         <Route path='/vitals' element={<Vitals />} />
         <Route path='/diagnosis' element={<Diagnosis />} />
         <Route path='/recommend' element={<Recommend />} />
-        <Route path='/patient-summary' element={<Report />} />
+        <Route path='/patient-summary/:id' element={<Report />} />
         <Route path='/history' element={<History />} />
         <Route path='/encyclopedia' element={<Encyclopedia />} />
         <Route path='/encyclopedia-detail' element={<EncyclopediaDetail />} />
