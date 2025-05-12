@@ -36,7 +36,7 @@ async def get_all_users(
 
 
 @user_router.get(
-    "/{user_id}",
+    "/identification/{user_id}",
     response_model=UserDisplay,
 )
 async def get_user_by_UserId(

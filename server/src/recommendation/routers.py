@@ -40,7 +40,7 @@ async def create_patient(
     return await PatientService(db).create_patient(request)
 
 
-@patient_router.get("/all", response_model=list[PatientBase])
+@patient_router.get("/all", response_model=list[PatientRes])
 async def get_all_patients(db: AsyncIOMotorDatabase = Depends(get_db)):
     return await PatientService(db).get_all_patients()
 

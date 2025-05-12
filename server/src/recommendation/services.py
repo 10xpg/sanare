@@ -48,12 +48,15 @@ class PatientService:
 
     async def get_all_patients(self):
         patients = await self.collection.find().to_list(None)
+        for patient in patients:
+            patient["_id"] = ConvertId.to_StringId(patient["_id"])
         return patients
 
     async def get_patient_by_ObjectId(self, object_id: str):
         patient = await self.collection.find_one(
             {"_id": ConvertId.to_ObjectId(object_id)}
         )
+        patient["_id"] = ConvertId.to_StringId(patient["_id"])
         if not patient:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

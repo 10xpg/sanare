@@ -75,32 +75,32 @@ class UserService:
 
     async def get_user_by_ObjectId(self, object_id: str):
         user = await self.collection.find_one({"_id": ConvertId.to_ObjectId(object_id)})
-        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"User with _id '{object_id}' not found"},
             )
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         return user
 
     async def get_user_by_UserId(self, user_id: str):
         user = await self.collection.find_one({"username": user_id})
-        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"User with user_id '{user_id}' not found"},
             )
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         return user
 
     async def get_user_by_email(self, user_email: str):
         user = await self.collection.find_one({"email": user_email})
-        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"User with user_email '{user_email}' not found"},
             )
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         return user
 
     async def update_user(self, username: str, request: UserUpdate):
@@ -115,22 +115,22 @@ class UserService:
             },
             return_document=ReturnDocument.AFTER,
         )
-        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": "User not found"},
             )
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         return user
 
     async def delete_user(self, username: str):
         user = await self.collection.find_one_and_delete({"username": username})
-        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"User '{username}' not found"},
             )
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         return HTTPException(
             status_code=status.HTTP_200_OK,
             detail={"detail": f"User '{username}' successfully deleted"},
