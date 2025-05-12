@@ -150,6 +150,7 @@ class DiagnosisService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail={"detail": "Failed to create diagnosis"},
             )
+        created_diagnosis["_id"] = str(created_diagnosis["_id"])
         created_diagnosis["patient"] = patient_id
         created_diagnosis["doctor"] = doctor_id
         created_diagnosis["vitals"] = vitals_id
@@ -164,6 +165,7 @@ class DiagnosisService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"Diagnosis with ObjectId '{object_id}' not found"},
             )
+        diagnosis["_id"] = str(diagnosis["_id"])
         diagnosis["patient"] = str(diagnosis["patient"])
         diagnosis["doctor"] = str(diagnosis["doctor"])
         diagnosis["vitals"] = str(diagnosis["vitals"])

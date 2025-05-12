@@ -49,6 +49,10 @@ class DiagnosisBase(BaseModel):
     condition: list[str]
 
 
+class DiagnosisRes(DiagnosisBase):
+    id: str = Field(alias="_id")
+
+
 class ReportBase(BaseModel):
     patient: str
     doctor: str

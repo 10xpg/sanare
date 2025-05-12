@@ -3,6 +3,7 @@ from recommendation.schemas import (
     PatientBase,
     PatientRes,
     DiagnosisBase,
+    DiagnosisRes,
     VitalsBase,
     VitalsRes,
     ReportBase,
@@ -95,7 +96,7 @@ diagnosis_router = APIRouter(
 
 
 @diagnosis_router.post(
-    "/", response_model=DiagnosisBase, status_code=status.HTTP_201_CREATED
+    "/", response_model=DiagnosisRes, status_code=status.HTTP_201_CREATED
 )
 async def create_diagnosis(
     patient_id: str,
