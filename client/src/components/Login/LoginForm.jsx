@@ -1,7 +1,7 @@
 import { faEye } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import api from '../../api/client'
 
 export const LoginForm = () => {
@@ -9,6 +9,8 @@ export const LoginForm = () => {
     username: '',
     password: ''
   }
+
+  const navigate = useNavigate()
   const [form, setForm] = useState(init)
 
   console.log(form)
@@ -29,6 +31,7 @@ export const LoginForm = () => {
       localStorage.setItem('access', res.data.access_token)
     }
     userLogin()
+    navigate('/home')
   }
 
   return (
@@ -57,7 +60,7 @@ export const LoginForm = () => {
             <input
               name='password'
               type='password'
-              placeholder='**********'
+              placeholder='password'
               required
               className='w-full h-10 rounded-xl p-4 pr-10 outline-black'
               onChange={handleChange}

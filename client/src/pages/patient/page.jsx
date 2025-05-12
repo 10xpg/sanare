@@ -1,4 +1,4 @@
-import { PatientForm, PatientSearch } from '../../components/Patient'
+import { PatientForm } from '../../components/Patient'
 import Layout from '../../Layout'
 
 export default function Patient() {
@@ -6,7 +6,7 @@ export default function Patient() {
     <div>
       <Layout>
         <div className='bg-black min-h-screen'>
-          <PatientSearch />
+          {/* <PatientSearch /> */}
           <PatientForm />
         </div>
       </Layout>
