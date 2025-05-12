@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState } from 'react'
 import api from '../../api/client'
 import { useNavigate } from 'react-router-dom'
-// import { parseISO } from 'date-fns'
 
 export const PatientSearch = () => {
   const navigate = useNavigate()
@@ -71,7 +70,7 @@ export const PatientSearch = () => {
           onChange={handleChange}
         />
         <button type='button' onClick={handleSearchSubmit}>
-          <FontAwesomeIcon icon={faMagnifyingGlass} className='absolute left-4 top-1/2 transform -translate-y-5 text-black' />
+          <FontAwesomeIcon icon={faMagnifyingGlass} className='absolute -right-28 top-1/2 transform -translate-y-5 text-black' />
         </button>
       </div>
       <datalist id='patientlist'>
@@ -83,3 +82,5 @@ export const PatientSearch = () => {
     </div>
   )
 }
+
+// TODO: find way to handle patients with same names

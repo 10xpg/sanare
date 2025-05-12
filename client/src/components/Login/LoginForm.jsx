@@ -27,11 +27,12 @@ export const LoginForm = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       })
       console.log(res.data)
+      if (res.status === 404) return
       localStorage.clear()
       localStorage.setItem('access', res.data.access_token)
+      navigate('/home')
     }
     userLogin()
-    navigate('/home')
   }
 
   return (

@@ -4,7 +4,8 @@ import api from '../../api/client'
 import { jwtDecode } from 'jwt-decode'
 
 export const WelcomeMessage = () => {
-  const payload = jwtDecode(localStorage.getItem('access'))
+  const tk = localStorage.getItem('access')
+  const payload = tk && jwtDecode(tk)
   console.log(payload)
 
   const [doctor, setDoctor] = useState({})
@@ -26,7 +27,7 @@ export const WelcomeMessage = () => {
 
   return (
     <div className='text-white hover:text-[#1ED346] px-10 py-10 text-2xl font-mono'>
-      Welcome! Dr.{`${doctor.first_name} ${doctor.last_name}`}{' '}
+      Welcome! Dr.{!doctor ? 'Inactive User' : `${doctor.first_name} ${doctor.last_name}`}{' '}
     </div>
   )
 }
