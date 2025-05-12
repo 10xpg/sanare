@@ -25,6 +25,7 @@ class UserBase(BaseModel):
 
 # DTO for User Display
 class UserDisplay(BaseModel):
+    id: str = Field(alias="_id")
     username: str
     first_name: str
     last_name: str

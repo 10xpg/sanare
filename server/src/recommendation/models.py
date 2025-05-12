@@ -31,7 +31,6 @@ class DbPatient(BaseModel):
     email: EmailStr
     address: str
     emergency_contacts: list[EmergencyContact]
-    vitals: list[PyObjectId] = []
     updated_at: Annotated[datetime, Field(default_factory=datetime.now)]
     created_at: Annotated[datetime, Field(default_factory=datetime.now)]
 

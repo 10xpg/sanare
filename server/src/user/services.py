@@ -41,6 +41,7 @@ class UserService:
         # new_user is an insertOneResult which is just the objectid of the new user
         # we use that id to find and return the new user
         created_user = await self.collection.find_one({"_id": new_user.inserted_id})
+        created_user["_id"] = ConvertId.to_StringId(created_user["_id"])
 
         ################################################################################################
         # Email Verification
@@ -74,6 +75,7 @@ class UserService:
 
     async def get_user_by_ObjectId(self, object_id: str):
         user = await self.collection.find_one({"_id": ConvertId.to_ObjectId(object_id)})
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -82,7 +84,8 @@ class UserService:
         return user
 
     async def get_user_by_UserId(self, user_id: str):
-        user = await self.collection.find_one({"_id": user_id})
+        user = await self.collection.find_one({"username": user_id})
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -92,6 +95,7 @@ class UserService:
 
     async def get_user_by_email(self, user_email: str):
         user = await self.collection.find_one({"email": user_email})
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -111,6 +115,7 @@ class UserService:
             },
             return_document=ReturnDocument.AFTER,
         )
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -120,6 +125,7 @@ class UserService:
 
     async def delete_user(self, username: str):
         user = await self.collection.find_one_and_delete({"username": username})
+        user["_id"] = ConvertId.to_StringId(user["_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

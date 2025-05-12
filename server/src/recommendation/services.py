@@ -31,12 +31,14 @@ class PatientService:
                 detail={"detail": "Patient already exists"},
             )
         patient_base = request.model_dump()
+
         db_patient_create = DbPatient(**patient_base)
         db_patient = db_patient_create.model_dump(by_alias=True)
         new_patient = await self.collection.insert_one(db_patient)
         created_patient = await self.collection.find_one(
             {"_id": new_patient.inserted_id}
         )
+        created_patient["_id"] = ConvertId.to_StringId(created_patient["_id"])
         if not created_patient:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -100,6 +102,7 @@ class VitalsService:
         db_vitals = db_vitals_create.model_dump(by_alias=True)
         new_vitals = await self.collection.insert_one(db_vitals)
         created_vitals = await self.collection.find_one({"_id": new_vitals.inserted_id})
+        created_vitals["_id"] = ConvertId.to_StringId(created_vitals["_id"])
         if not created_vitals:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, UploadFile, File, status
 from recommendation.schemas import (
     PatientBase,
+    PatientRes,
     DiagnosisBase,
     VitalsBase,
+    VitalsRes,
     ReportBase,
     ReportRes,
     RecommendationBase,
@@ -30,7 +32,7 @@ patient_router = APIRouter(
 
 
 @patient_router.post(
-    "/", response_model=PatientBase, status_code=status.HTTP_201_CREATED
+    "/", response_model=PatientRes, status_code=status.HTTP_201_CREATED
 )
 async def create_patient(
     request: PatientBase, db: AsyncIOMotorDatabase = Depends(get_db)
@@ -68,7 +70,7 @@ vitals_router = APIRouter(
 )
 
 
-@vitals_router.post("/", response_model=VitalsBase, status_code=status.HTTP_201_CREATED)
+@vitals_router.post("/", response_model=VitalsRes, status_code=status.HTTP_201_CREATED)
 async def create_vitals(
     patient_id: str,
     request: VitalsBase,

@@ -15,6 +15,10 @@ class PatientBase(BaseModel):
     emergency_contacts: list[EmergencyContact]
 
 
+class PatientRes(PatientBase):
+    id: str = Field(alias="_id")
+
+
 class VitalsBase(BaseModel):
     patient: str
     weight: Annotated[float, Field(ge=0, le=610)]
@@ -27,6 +31,10 @@ class VitalsBase(BaseModel):
     respiratory_rate: Annotated[int, Field(ge=0, le=70)]
     breathing_difficulty: bool
     oxygen_saturation: Annotated[float, Field(ge=50, le=120)]
+
+
+class VitalsRes(VitalsBase):
+    id: str = Field(alias="_id")
 
 
 class DiagnosisBase(BaseModel):
