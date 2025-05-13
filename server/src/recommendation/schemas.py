@@ -77,6 +77,7 @@ class RecommendationBase(BaseModel):
 
 
 class TraditionalDrugDisplay(BaseModel):
+    id: str = Field(alias="_id")
     product_name: str
     active_ingredient: str | None
     disease_indications: str | None

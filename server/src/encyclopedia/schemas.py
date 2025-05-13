@@ -8,6 +8,7 @@ class TraditionalDrugsDisplay(BaseModel):
     disease_indications: Any
     scientific_literature_reference: Any
     adverse_effects: Any
+    id: str = Field(alias="_id")
 
 
 class OrthodoxDrugs(BaseModel):

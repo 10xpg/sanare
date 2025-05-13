@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from user.utils import PyObjectId
 from typing import Any
+from bson import ObjectId
 
 
 class DbOtrhodoxDrugs(BaseModel):
@@ -67,3 +68,6 @@ class DbTraditionalDrugs(BaseModel):
     disease_indications: str | None
     scientific_literature_reference: str | None
     adverse_effects: str | None
+
+    class Config:
+        json_encoders = {ObjectId: str}

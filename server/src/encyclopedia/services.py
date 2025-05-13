@@ -1,4 +1,3 @@
-from encyclopedia.models import DbOtrhodoxDrugs, DbTraditionalDrugs
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from user.utils import ConvertId
 
@@ -38,4 +37,9 @@ class EncyclopediaService:
         traditional_drugs = await self.traditional_collection.find(
             # {"$text": {"$search": query}}
         ).to_list(None)
+
+        for d in traditional_drugs:
+            d["_id"] = ConvertId.to_StringId(d["_id"])
+            print(d)
+
         return traditional_drugs

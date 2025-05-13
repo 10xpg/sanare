@@ -291,6 +291,8 @@ class RecommendationService:
         recommendations = await self.traditionaldrugs.find(
             {"disease_indications": {"$regex": pattern, "$options": "i"}}
         ).to_list(None)
+        for td in recommendations:
+            td["_id"] = ConvertId.to_StringId(td["_id"])
 
         return recommendations
 
