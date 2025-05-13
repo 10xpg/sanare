@@ -56,13 +56,14 @@ export const DiagnosisForm = () => {
 
   const handleDiagnosisFormSubmit = async (e) => {
     e.preventDefault()
+
     const filesFormData = new FormData()
     uploads.flat().forEach((file) => {
       filesFormData.append('files', file)
     })
 
     const [form, files] = await Promise.all([
-      (api.post(
+      api.post(
         '/diagnosis',
         {
           ...diagnosisForm,
@@ -80,8 +81,9 @@ export const DiagnosisForm = () => {
           }
         }
       ),
-      api.post('/diagnosis/files', filesFormData, { headers: { 'Content-Type': 'multipart/form-data' } }))
+      api.post('/diagnosis/files', filesFormData, { headers: { 'Content-Type': 'multipart/form-data' } })
     ])
+    console.log(form)
     console.log(files)
 
     navigate('/recommend', {
@@ -215,3 +217,6 @@ export const DiagnosisForm = () => {
     </div>
   )
 }
+
+// TODO: work on form ui / styling
+// TODO: restrict allowable file types
