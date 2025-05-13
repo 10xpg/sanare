@@ -197,7 +197,7 @@ class ReportService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail={"detail": "Failed to create report"},
             )
-
+        created_report["_id"] = str(created_report["_id"])
         created_report["patient"] = patient_id
         created_report["doctor"] = doctor_id
         created_report["diagnosis"] = diagnosis_id

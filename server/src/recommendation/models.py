@@ -98,8 +98,9 @@ class DbReport(BaseModel):
     patient: PyObjectId
     doctor: PyObjectId
     diagnosis: PyObjectId
-    selected_orthodox_drug: list[str] = []
-    selected_traditional_drug: list[str] = []
+    selected_orthodox_drug: list[Any] = []
+    recommended_by_doctor: list[str] = []
+    selected_traditional_drug: list[Any] = []
     created_at: Annotated[datetime, Field(default_factory=datetime.now)]
 
     class Config:
@@ -114,9 +115,9 @@ class DbRecommendation(BaseModel):
     patient: PyObjectId
     vitals: PyObjectId
     diagnosis: PyObjectId
-    recommended_orthodox_drug: list[str] = []
+    recommended_orthodox_drug: list[Any] = []
     recommended_by_doctor: list[str] = []
-    recommended_traditional_drug: list[str] = []
+    recommended_traditional_drug: list[Any] = []
     created_at: Annotated[datetime, Field(default_factory=datetime.now)]
 
     class Config:

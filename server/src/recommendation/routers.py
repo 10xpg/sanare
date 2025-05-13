@@ -140,7 +140,7 @@ report_router = APIRouter(
 )
 
 
-@report_router.post("/", response_model=ReportBase, status_code=status.HTTP_201_CREATED)
+@report_router.post("/", response_model=ReportRes, status_code=status.HTTP_201_CREATED)
 async def create_report(
     patient_id: str,
     doctor_id: str,
@@ -214,6 +214,6 @@ async def get_traditional_drugs(
     return await RecommendationService(db).get_traditional_recommendations(condition)
 
 
-@recommendation_router.post("/orthodox-drugs/{condition}")
+@recommendation_router.get("/orthodox-drugs/{condition}")
 async def get_orthodox_drugs(condition: str, age: int):
     pass

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr
 from recommendation.models import Sex, EmergencyContact, PulseRhythm, PulseStrength
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Any
 
 
 class PatientBase(BaseModel):
@@ -57,8 +57,9 @@ class ReportBase(BaseModel):
     patient: str
     doctor: str
     diagnosis: str
-    selected_orthodox_drug: list[str] = []
-    selected_traditional_drug: list[str] = []
+    selected_orthodox_drug: list[Any] = []
+    selected_traditional_drug: list[Any] = []
+    recommended_by_doctor: list[str]
 
 
 class ReportRes(ReportBase):
@@ -71,9 +72,9 @@ class RecommendationBase(BaseModel):
     patient: str
     vitals: str
     diagnosis: str
-    recommended_orthodox_drug: list[str]
+    recommended_orthodox_drug: list[Any]
     recommended_by_doctor: list[str]
-    recommended_traditional_drug: list[str]
+    recommended_traditional_drug: list[Any]
 
 
 class TraditionalDrugDisplay(BaseModel):
