@@ -1,9 +1,17 @@
 import { PropTypes } from 'prop-types'
 
-export const TraditionalRecommender = ({ getDrugs, drugs }) => {
+export const TraditionalRecommender = ({ getDrugs, drugs, state }) => {
+  const handleChange = (e) => {
+    const { name, selectedOptions } = e.target
+    const vals = Array.from(selectedOptions).map((drug) => drug.value)
+    state.setTds({ ...state.tds, [name]: vals })
+  }
+
   const handleGetDrugs = () => {
     getDrugs()
   }
+
+  console.log(state.tds)
 
   return (
     <div className='text-xl pb-10'>
@@ -14,6 +22,8 @@ export const TraditionalRecommender = ({ getDrugs, drugs }) => {
             <select
               id='recommended-td'
               name='recommended_traditional_drug'
+              value={state.tds.recommended_traditional_drug}
+              onChange={handleChange}
               multiple
               className='p-3 w-8/12 h-auto rounded-xl placeholder-[#999EA4] text-center text-black  outline-black'
             >
@@ -43,5 +53,6 @@ export const TraditionalRecommender = ({ getDrugs, drugs }) => {
 
 TraditionalRecommender.propTypes = {
   getDrugs: PropTypes.func,
-  drugs: PropTypes.array
+  drugs: PropTypes.array,
+  state: PropTypes.object
 }

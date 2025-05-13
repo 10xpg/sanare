@@ -12,7 +12,6 @@ export const DoctorInfo = ({ doctorId, created_at }) => {
     const fetchDoctorDetails = async () => {
       try {
         const res = await api.get(`/user/${doctorId}`)
-        console.log(res.data)
         setDoctor(res.data)
       } catch (error) {
         setErr(error)

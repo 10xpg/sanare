@@ -16,7 +16,6 @@ export const PatientSummary = () => {
     const fetchReport = async () => {
       try {
         const res = await api.get(`/report/${id}`)
-        console.log(res.data)
         setReport(res.data)
       } catch (error) {
         setErr(error)

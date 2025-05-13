@@ -11,7 +11,6 @@ export const RecommendationInfo = ({ report }) => {
     const fetchDiagnoisDetails = async () => {
       try {
         const res = await api.get(`/diagnosis/${report.diagnosis}`)
-        console.log(res.data)
         setDiagnosis(res.data)
       } catch (error) {
         setErr(error)
@@ -24,6 +23,9 @@ export const RecommendationInfo = ({ report }) => {
 
   if (err) return <div>{`An Error Occured ==> ${err}`}</div>
   if (loading) return <div>Loading...</div>
+
+  console.log(report)
+
   return (
     <div>
       <form>
@@ -34,15 +36,15 @@ export const RecommendationInfo = ({ report }) => {
           </label>
           <label>
             System Recommended Orthodox Drug(s):
-            <div>{diagnosis.selected_orthodox_drug ? diagnosis.selected_orthodox_drug.join(', ') : 'none specified'}</div>
+            <div>{report.selected_orthodox_drug.length > 0 ? report.selected_orthodox_drug.join(', ') : 'none specified'}</div>
           </label>
           <label>
             Doctor&apos;s Recommended Drug(s):
-            <div>{diagnosis.condition ? diagnosis.condition.join(', ') : 'none specified'}</div>
+            <div>{report.recommended_by_doctor ? report.recommended_by_doctor.join(', ') : 'none specified'}</div>
           </label>
           <label>
             System Recommended Traditional Drug(s):
-            <div>{diagnosis.selected_traditional_drug ? diagnosis.selected_orthodox_drug.join(', ') : 'none specified'}</div>
+            <div>{report.selected_traditional_drug.length > 0 ? report.selected_traditional_drug.join(', ') : 'none specified'}</div>
           </label>
         </span>
       </form>

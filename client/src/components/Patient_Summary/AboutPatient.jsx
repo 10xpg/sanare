@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { PropTypes } from 'prop-types'
 import api from '../../api/client'
-import { calculateAge } from '../../utils/helpers'
+import { calculatPreciseAge } from '../../utils/helpers'
 
 export const PatientInfo = ({ patientId }) => {
   const [patient, setPatient] = useState({})
@@ -12,7 +12,6 @@ export const PatientInfo = ({ patientId }) => {
     const fetchPatientDetails = async () => {
       try {
         const res = await api.get(`/patient/${patientId}`)
-        console.log(res.data)
         setPatient(res.data)
       } catch (error) {
         setErr(error)
@@ -46,7 +45,7 @@ export const PatientInfo = ({ patientId }) => {
           </label>
           <label>
             Age:
-            <div>{calculateAge(patient.dob)}</div>
+            <div>{calculatPreciseAge(patient.dob)}</div>
           </label>
           <label>
             Phone:

@@ -7,7 +7,7 @@ export const DoctorsRecommendation = ({ rec }) => {
         Doctor&apos;s Recommendation:
         <input
           type='text'
-          className='p-3 w-10/12 h-24 rounded-xl placeholder-[#999EA4] text-black  outline-black'
+          className='p-3 w-8/12 h-24 rounded-xl placeholder-[#999EA4] text-black  outline-black'
           placeholder='Type here'
           name='recommended_by_doctor'
           onChange={rec.handleDocRec}
@@ -19,7 +19,5 @@ export const DoctorsRecommendation = ({ rec }) => {
 }
 
 DoctorsRecommendation.propTypes = {
-  // docRec: PropTypes.string,
-  // handleDocRec: PropTypes.function
   rec: PropTypes.object
 }
