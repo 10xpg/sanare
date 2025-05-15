@@ -23,3 +23,6 @@ drugstore/
 
 # Uploaded diagnostics files
 files/
+
+# model lf
+*.safetensors
