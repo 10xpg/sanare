@@ -10,6 +10,8 @@ from recommendation.schemas import (
     ReportRes,
     RecommendationBase,
     TraditionalDrugDisplay,
+    PredictedDrugBase,
+    PredictedDrugDisplay,
 )
 from recommendation.services import (
     PatientService,
@@ -214,6 +216,8 @@ async def get_traditional_drugs(
     return await RecommendationService(db).get_traditional_recommendations(condition)
 
 
-@recommendation_router.get("/orthodox-drugs/{condition}")
+@recommendation_router.get(
+    "/orthodox-drugs/{condition}", response_model=list[PredictedDrugDisplay]
+)
 async def get_orthodox_drugs(condition: str, age: int):
-    pass
+    return await RecommendationService.get_orthodox_recommendations(condition, age)

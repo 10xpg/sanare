@@ -81,6 +81,8 @@ class AuthService:
             },
             return_document=ReturnDocument.AFTER,
         )
+        user["_id"] = ConvertId.to_StringId(user["_id"])
+
         return {
             "message": "Email Verification Successful ✅",
             "user_status": user,

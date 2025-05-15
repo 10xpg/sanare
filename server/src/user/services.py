@@ -50,6 +50,8 @@ class UserService:
 
         recipients = [user_base["email"]]
         subject = "Verify your email account"
+
+        ## aka body
         html_message = f""""
         <h1>Verify your Email</h1>
         <p>Please click this <a href="{link}">link</a> to verify your email</p>
@@ -71,6 +73,8 @@ class UserService:
 
     async def get_all_users(self):
         users = await self.collection.find().to_list(None)
+        for user in users:
+            user["_id"] = ConvertId.to_StringId(user["_id"])
         return users
 
     async def get_user_by_ObjectId(self, object_id: str):

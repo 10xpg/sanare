@@ -17,6 +17,7 @@ from fastapi import HTTPException, status
 from user.utils import ConvertId
 from pymongo import ReturnDocument
 import re
+from model.model import predictor
 
 
 class PatientService:
@@ -296,5 +297,8 @@ class RecommendationService:
 
         return recommendations
 
-    async def get_orthodox_recommendations(self, condition: str, age: int):
-        pass
+    async def get_orthodox_recommendations(condition: str, age: int | str):
+        recommendations = []
+        prediction = predictor(age, condition)
+        recommendations.append(prediction)
+        return recommendations

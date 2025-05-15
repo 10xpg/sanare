@@ -86,14 +86,11 @@ class TraditionalDrugDisplay(BaseModel):
 
 
 class PredictedDrugBase(BaseModel):
-    drug_name: str | None
-    category: str | None
-    effectiveness: str | None
-    side_effect: str | None
+    age: int | str
+    condition: str
 
 
 class PredictedDrugDisplay(BaseModel):
-    age: int | None
     drug_name: str | None
     category: str | None
     effectiveness: str | None
