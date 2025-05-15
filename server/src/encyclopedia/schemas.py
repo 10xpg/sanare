@@ -3,15 +3,16 @@ from typing import Any
 
 
 class TraditionalDrugsDisplay(BaseModel):
+    id: str = Field(alias="_id")
     product_name: Any
     active_ingredient: Any
     disease_indications: Any
     scientific_literature_reference: Any
     adverse_effects: Any
-    id: str = Field(alias="_id")
 
 
 class OrthodoxDrugs(BaseModel):
+    id: str = Field(alias="_id")
     # drugbank_id: Any = Field(alias="drugbank-id")
     name: Any
     description: Any

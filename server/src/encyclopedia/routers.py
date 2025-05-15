@@ -1,5 +1,9 @@
 from fastapi import APIRouter, Depends, Query
-from encyclopedia.schemas import OrthodoxDrugsDisplay, TraditionalDrugsDisplay
+from encyclopedia.schemas import (
+    OrthodoxDrugsDisplay,
+    TraditionalDrugsDisplay,
+    OrthodoxDrugs,
+)
 from encyclopedia.services import EncyclopediaService
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from database import get_db
@@ -10,7 +14,7 @@ from auth.jwt_utils import is_verified
 encyclopedia_router = APIRouter(
     prefix="/encyclopedia",
     tags=["Encyclopedia"],
-    dependencies=[Depends(is_verified)],
+    # dependencies=[Depends(is_verified)],
 )
 
 
@@ -23,6 +27,13 @@ async def get_all_orthodox_drugs(
     return await EncyclopediaService(db).get_orthodox_drugs(limit, last_id)
 
 
+@encyclopedia_router.get("/orthodox/{drug_name}", response_model=OrthodoxDrugs)
+async def get_orthodox_drug_by_name(
+    drug_name: str, db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    return await EncyclopediaService(db).get_orthodox_drug(drug_name)
+
+
 @encyclopedia_router.get(
     "/traditional/all", response_model=list[TraditionalDrugsDisplay]
 )
@@ -31,3 +42,12 @@ async def get_all_traditional_drugs(
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
     return await EncyclopediaService(db).get_traditional_drugs()
+
+
+@encyclopedia_router.get(
+    "/traditional/{drug_name}", response_model=TraditionalDrugsDisplay
+)
+async def get_traditional_drug_by_name(
+    drug_name: str, db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    return await EncyclopediaService(db).get_traditional_drug(drug_name)

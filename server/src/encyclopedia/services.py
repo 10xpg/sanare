@@ -1,5 +1,6 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from user.utils import ConvertId
+from fastapi import HTTPException, status
 
 
 class EncyclopediaService:
@@ -20,6 +21,8 @@ class EncyclopediaService:
             .limit(limit)
             .to_list(length=limit)
         )
+        for od in orthodox_drugs:
+            od["_id"] = ConvertId.to_StringId(od["_id"])
         if orthodox_drugs:
             next_last_id = str(orthodox_drugs[-1]["_id"])
         else:
@@ -43,3 +46,32 @@ class EncyclopediaService:
             print(d)
 
         return traditional_drugs
+
+    async def get_orthodox_drug(self, drug: str):
+        orthodox_drug = await self.orthodox_collection.find_one(
+            {
+                "$or": [
+                    {"name": {"$regex": drug, "$options": "i"}},
+                    {"description": {"$regex": drug, "$options": "i"}},
+                ]
+            }
+        )
+        if not orthodox_drug:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={"detail": f"Orthodox drug with name '{drug}' not found"},
+            )
+        orthodox_drug["_id"] = ConvertId.to_StringId(orthodox_drug["_id"])
+        return orthodox_drug
+
+    async def get_traditional_drug(self, drug: str):
+        traditional_drug = await self.traditional_collection.find_one(
+            {"product_name": {"$regex": drug, "$options": "i"}}
+        )
+        if not traditional_drug:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={"detail": f"Traditional drug with name '{drug}' not found"},
+            )
+        traditional_drug["_id"] = ConvertId.to_StringId(traditional_drug["_id"])
+        return traditional_drug
