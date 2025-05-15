@@ -27,11 +27,18 @@ async def get_all_orthodox_drugs(
     return await EncyclopediaService(db).get_orthodox_drugs(limit, last_id)
 
 
-@encyclopedia_router.get("/orthodox/{drug_name}", response_model=OrthodoxDrugs)
+@encyclopedia_router.get("/orthodox/name/{drug_name}", response_model=OrthodoxDrugs)
 async def get_orthodox_drug_by_name(
     drug_name: str, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
-    return await EncyclopediaService(db).get_orthodox_drug(drug_name)
+    return await EncyclopediaService(db).get_orthodox_drug_by_name(drug_name)
+
+
+@encyclopedia_router.get("/orthodox/{_id}", response_model=OrthodoxDrugs)
+async def get_orthodox_drug_by_ObjectId(
+    _id: str, db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    return await EncyclopediaService(db).get_orthodox_drug(_id)
 
 
 @encyclopedia_router.get(
@@ -45,9 +52,16 @@ async def get_all_traditional_drugs(
 
 
 @encyclopedia_router.get(
-    "/traditional/{drug_name}", response_model=TraditionalDrugsDisplay
+    "/traditional/name/{drug_name}", response_model=TraditionalDrugsDisplay
 )
 async def get_traditional_drug_by_name(
     drug_name: str, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
-    return await EncyclopediaService(db).get_traditional_drug(drug_name)
+    return await EncyclopediaService(db).get_traditional_drug_by_name(drug_name)
+
+
+@encyclopedia_router.get("/traditional/{_id}", response_model=TraditionalDrugsDisplay)
+async def get_traditional_drug_by_ObjectId(
+    _id: str, db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    return await EncyclopediaService(db).get_traditional_drug(_id)
