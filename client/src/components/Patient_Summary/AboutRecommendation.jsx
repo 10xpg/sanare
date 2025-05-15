@@ -24,8 +24,6 @@ export const RecommendationInfo = ({ report }) => {
   if (err) return <div>{`An Error Occured ==> ${err}`}</div>
   if (loading) return <div>Loading...</div>
 
-  console.log(report)
-
   return (
     <div>
       <form>

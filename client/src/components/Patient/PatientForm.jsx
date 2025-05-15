@@ -50,8 +50,6 @@ export const PatientForm = () => {
     navigate('/vitals', { state: { patientId: res.data._id } })
   }
 
-  console.log(patientForm)
-
   return (
     <div className='bg-black text-white font-mono pt-32 px-32'>
       <PatientSearch />

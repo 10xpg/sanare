@@ -1,12 +1,24 @@
-import { DrugsDetail } from '../../components/Encyclopedia'
+import { OrthodoxDrugsDetail, TraditionalDrugsDetail } from '../../components/Encyclopedia'
 import Layout from '../../Layout'
 
-export default function EncyclopediaDetail() {
+export function OrthodoxEncyclopediaDetail() {
   return (
     <div>
       <Layout>
         <div className='bg-black min-h-screen'>
-          <DrugsDetail />
+          <OrthodoxDrugsDetail />
+        </div>
+      </Layout>
+    </div>
+  )
+}
+
+export function TraditionalEncyclopediaDetail() {
+  return (
+    <div>
+      <Layout>
+        <div className='bg-black min-h-screen'>
+          <TraditionalDrugsDetail />
         </div>
       </Layout>
     </div>

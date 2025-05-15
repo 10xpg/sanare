@@ -20,7 +20,6 @@ export const HistorySearch = ({ setHistory, og }) => {
           h.patient.last_name.toLowerCase().includes(value.toLowerCase())
       )
       if (filteredHistory) {
-        console.log(filteredHistory)
         setHistory(filteredHistory)
       }
     }

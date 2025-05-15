@@ -12,8 +12,6 @@ export const PatientSearch = () => {
   const [patientSelect, setPatientSelect] = useState(null)
   const [error, setError] = useState(null)
 
-  console.log('selected: ', patientSelect)
-
   const handlePatientSelect = (patient) => {
     setPatientSelect(patient)
   }
@@ -51,7 +49,7 @@ export const PatientSearch = () => {
   }, [])
 
   const handleSearchSubmit = () => {
-    if (!patientSelect || !patientSelect._id) return alert('No patient selected')
+    if (!patientSelect || !patientSelect?._id) return alert('No patient selected')
     navigate('/vitals', { state: { patientId: patientSelect._id } })
   }
 

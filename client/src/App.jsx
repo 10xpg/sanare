@@ -9,7 +9,7 @@ import Recommend from './pages/recommend/page'
 import Report from './pages/patient_summary/page'
 import History from './pages/history/page'
 import Encyclopedia from './pages/encyclopedia/page'
-import EncyclopediaDetail from './pages/encyclopedia_detail/page'
+import { OrthodoxEncyclopediaDetail, TraditionalEncyclopediaDetail } from './pages/encyclopedia_detail/page'
 import PageNotFound from './pages/not_found/page'
 import Register from './pages/register/page'
 
@@ -29,7 +29,8 @@ export default function App() {
         <Route path='/patient-summary/:id' element={<Report />} />
         <Route path='/history' element={<History />} />
         <Route path='/encyclopedia' element={<Encyclopedia />} />
-        <Route path='/encyclopedia-detail/:id' element={<EncyclopediaDetail />} />
+        <Route path='/encyclopedia-od-detail/:id' element={<OrthodoxEncyclopediaDetail />} />
+        <Route path='/encyclopedia-td-detail/:id' element={<TraditionalEncyclopediaDetail />} />
       </Routes>
     </BrowserRouter>
   )

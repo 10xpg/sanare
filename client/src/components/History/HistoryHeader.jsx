@@ -4,21 +4,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export const HistoryHeader = () => {
   return (
-    <>
-      <tr className=' '>
-        <th className='border p-3'>
+    <tr className=' '>
+      <th className='border p-3'>
+        <span className='flex gap-3 justify-center items-center'>
           <FontAwesomeIcon icon={faFile} />
           Title
-        </th>
-        <th className='border p-3'>
+        </span>
+      </th>
+      <th className='border p-3'>
+        <span className='flex gap-3 justify-center items-center'>
           <FontAwesomeIcon icon={faUserDoctor} />
           Created By
-        </th>
-        <th className='border p-3'>
+        </span>
+      </th>
+      <th className='border p-3'>
+        <span className='flex gap-3 justify-center items-center'>
           <FontAwesomeIcon icon={faClock} />
           Timestamp
-        </th>
-      </tr>
-    </>
+        </span>
+      </th>
+    </tr>
   )
 }
