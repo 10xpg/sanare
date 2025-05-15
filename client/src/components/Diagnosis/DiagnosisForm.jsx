@@ -1,9 +1,10 @@
-import { faPaperclip, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPaperclip } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { jwtDecode } from 'jwt-decode'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import api from '../../api/client'
+import { suppressor } from '../../utils/helpers'
 
 export const DiagnosisForm = () => {
   const navigate = useNavigate()
@@ -83,8 +84,9 @@ export const DiagnosisForm = () => {
       ),
       api.post('/diagnosis/files', filesFormData, { headers: { 'Content-Type': 'multipart/form-data' } })
     ])
-    console.log(form)
-    console.log(files)
+
+    suppressor(files)
+    suppressor(doctor)
 
     navigate('/recommend', {
       state: {
@@ -98,117 +100,113 @@ export const DiagnosisForm = () => {
 
   if (error) return <div>{`An Error Occured ==> ${error}`}</div>
 
-  console.log(diagnosisForm)
-  console.log('uploads: ', uploads)
-  console.log(doctor)
-
   return (
-    <div className='bg-black text-white font-mono  px-32 '>
-      <div className='font-medium uppercase text-2xl pb-6'>Diagnosis</div>
-      <form className='text-[#999EA4] ' onSubmit={handleDiagnosisFormSubmit}>
-        <div className='flex flex-col gap-10  py-3'>
-          <label className='flex-1'>
+    <div className='bg-black text-white font-mono px-20 py-12'>
+      <div className='font-medium uppercase text-2xl pb-8'>Diagnosis</div>
+
+      <form className='text-[#999EA4]' onSubmit={handleDiagnosisFormSubmit}>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+          {/* Column 1 */}
+          <label>
             Medical History
-            <br />
             <input
               type='text'
               placeholder='Type here'
-              className='w-full h-10 rounded placeholder-[#999EA4] text-black p-3 outline-black'
+              className='w-full h-16 mt-1 rounded placeholder-[#999EA4] text-black p-3 outline-black'
               name='medical_history'
               onChange={handleDiagnosisFormChange}
               value={diagnosisForm.medical_history}
             />
           </label>
-          <label className='flex-1'>
+
+          <label>
             Allergies
-            <br />
             <input
               type='text'
               placeholder='Type here'
-              className='w-full h-10 rounded placeholder-[#999EA4] text-black p-3 outline-black'
+              className='w-full h-16 mt-1 rounded placeholder-[#999EA4] text-black p-3 outline-black'
               name='allergies'
               onChange={handleDiagnosisFormChange}
               value={diagnosisForm.allergies}
             />
           </label>
-          <label className='flex-1'>
+
+          <label>
             Symptoms
-            <br />
             <input
               type='text'
               placeholder='Type here'
-              className='w-full h-10 rounded placeholder-[#999EA4] text-black p-3 outline-black'
+              className='w-full h-16 mt-1 rounded placeholder-[#999EA4] text-black p-3 outline-black'
               name='symptoms'
               onChange={handleDiagnosisFormChange}
               value={diagnosisForm.symptoms}
             />
           </label>
-          <label className='flex-1'>
+
+          <label>
             Current Medications
-            <br />
             <input
               type='text'
               placeholder='Type here'
-              className='w-full h-10 rounded placeholder-[#999EA4] text-black p-3 outline-black'
+              className='w-full h-16 mt-1 rounded placeholder-[#999EA4] text-black p-3 outline-black'
               name='current_medications'
               onChange={handleDiagnosisFormChange}
               value={diagnosisForm.current_medications}
             />
           </label>
 
-          <span className='flex gap-4 items-center'>
-            <label className='flex-1'>
+          {/* Full-width row */}
+          <div className='col-span-2 md:col-span-2'>
+            <label>
               Upload Diagnostic Tests | Images
-              <br />
-              <div className='relative flex items-center '>
-                <FontAwesomeIcon icon={faPaperclip} className='absolute left-3 text-black ' size='lg' />
+              <div className='relative flex items-center mt-1'>
+                <FontAwesomeIcon icon={faPaperclip} className='absolute left-3 text-black' size='lg' />
                 <input
                   type='file'
                   multiple
-                  className='file:w-1/2 file:h-14 file:rounded-xl placeholder-[#999EA4] text-[#999EA4] pt-2 file:mr-4 file:py-2 file:pl-8  hover:file:bg-[#999EA4]'
+                  className='file:w-2/3 file:h-14 file:rounded-xl placeholder-[#999EA4] text-[#999EA4] pt-2 file:mr-4 file:py-2 file:px-8 hover:file:bg-[#999EA4]'
                   name='files'
                   onChange={handleFilesChange}
                 />
               </div>
             </label>
-          </span>
+          </div>
 
-          <label className='flex-1'>
-            Notes
-            <br />
-            <input
-              type='text'
-              placeholder='Type here'
-              className='w-full h-16 rounded placeholder-[#999EA4] text-black  p-3 outline-black'
-              name='notes'
-              onChange={handleDiagnosisFormChange}
-              value={diagnosisForm.notes}
-            />
-          </label>
+          <div className='col-span-1 md:col-span-2'>
+            <label>
+              Notes
+              <input
+                type='text'
+                placeholder='Type here'
+                className='w-full h-24 mt-1 rounded placeholder-[#999EA4] text-black p-3 outline-black'
+                name='notes'
+                onChange={handleDiagnosisFormChange}
+                value={diagnosisForm.notes}
+              />
+            </label>
+          </div>
 
-          <span className='flex gap-4 items-center '>
-            <label className='flex-1'>
+          <div className='col-span-1 md:col-span-2 flex items-end gap-4'>
+            <label className='flex-grow'>
               Condition(s)
-              <br />
               <input
                 type='text'
                 placeholder='Type here'
                 required
-                className='w-full h-14 rounded placeholder-[#999EA4] text-black p-3 outline-black'
+                className='w-full h-16 mt-1 rounded placeholder-[#999EA4] text-black p-3 outline-black'
                 name='condition'
                 onChange={handleDiagnosisFormChange}
                 value={diagnosisForm.condition}
               />
             </label>
-            <button>
-              <FontAwesomeIcon icon={faPlus} className='text-[#999EA4] text-3xl ' />
-            </button>
-          </span>
+          </div>
         </div>
-        <div className='flex justify-end py-20'>
+
+        {/* Submit button */}
+        <div className='flex justify-end pt-16'>
           <button
-            className=' bg-white text-black w-2/12 px-4 py-2 rounded-3xl text-center  hover:bg-[#999EA4] hover:text-white '
             type='submit'
+            className='bg-white text-black w-1/5  px-4 py-2 rounded-3xl hover:bg-[#999EA4] hover:text-white outline-black'
           >
             Submit
           </button>

@@ -11,8 +11,6 @@ export const TraditionalRecommender = ({ getDrugs, drugs, state }) => {
     getDrugs()
   }
 
-  console.log(state.tds)
-
   return (
     <div className='text-xl pb-10'>
       <label htmlFor='recommended-td' className='flex items-center justify-between pr-10'>
@@ -27,9 +25,10 @@ export const TraditionalRecommender = ({ getDrugs, drugs, state }) => {
               multiple
               className='p-3 w-8/12 h-auto rounded-xl placeholder-[#999EA4] text-center text-black  outline-black'
             >
-              <option value='' disabled>
+              <option value='' disabled className='border-b-2 '>
                 ---Traditional Drugs---
               </option>
+
               {[...new Map(drugs.flat().map((d) => [d.product_name, d])).values()].map((d) => (
                 <option key={d._id} value={d.product_name} className='p-2'>
                   {d.product_name}

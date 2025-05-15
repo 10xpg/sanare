@@ -30,14 +30,16 @@ export const OrthodoxRecommender = ({ getDrugs, drugs, state }) => {
               multiple
               className='p-3 w-8/12 h-auto rounded-xl placeholder-[#999EA4] text-center text-black  outline-black'
             >
-              <option value='' disabled>
+              <option value='' disabled className='border-b-2'>
                 ---Orthodox Drugs---
               </option>
+
               {drugs
+                .flat()
                 .filter((d) => d !== null)
-                .map((d) => (
-                  <option key={d._id} value={d.product_name} className='p-2'>
-                    {d.product_name}
+                .map((d, index) => (
+                  <option key={index} value={d.drug_name} className='p-2'>
+                    {d.drug_name}
                   </option>
                 ))}
             </select>
@@ -61,5 +63,3 @@ OrthodoxRecommender.propTypes = {
   drugs: PropTypes.array,
   state: PropTypes.object
 }
-
-// TODO: integrate with rec model

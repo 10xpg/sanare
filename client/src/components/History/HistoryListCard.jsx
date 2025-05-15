@@ -19,7 +19,6 @@ export const HistoryItem = () => {
               api.get(`/patient/${report.patient}`),
               api.get(`/diagnosis/${report.diagnosis}`)
             ])
-            // console.log(doctor.data, patient.data, diagnosis.data)
             return { ...report, doctor: doctor.data, patient: patient.data, diagnosis: diagnosis.data }
           })
         )
@@ -34,10 +33,19 @@ export const HistoryItem = () => {
     fetchHistory()
   }, [])
 
-  if (err) return <div>{`An Error Occured ==> ${err}`}</div>
-  if (loading) return <div>Loading...</div>
+  if (err)
+    return (
+      <tr>
+        <td>{`An Error Occured ==> ${err}`}</td>
+      </tr>
+    )
 
-  console.log(history)
+  if (loading)
+    return (
+      <tr>
+        <td>Loading...</td>
+      </tr>
+    )
 
   return history.map((report) => (
     <tr key={report._id}>

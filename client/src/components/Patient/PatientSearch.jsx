@@ -65,7 +65,7 @@ export const PatientSearch = () => {
           type='text'
           list='patientlist'
           placeholder='Patient Name'
-          className='w-96 rounded-2xl mx-2 py-1 px-2 text-center font-mono font-medium text-black outline-black placeholder:italic'
+          className='w-96 rounded-2xl mx-4 py-2 px-2 text-center font-mono font-medium text-black outline-black placeholder:italic'
           value={searchTerm}
           onChange={handleChange}
         />

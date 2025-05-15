@@ -29,7 +29,7 @@ export default function App() {
         <Route path='/patient-summary/:id' element={<Report />} />
         <Route path='/history' element={<History />} />
         <Route path='/encyclopedia' element={<Encyclopedia />} />
-        <Route path='/encyclopedia-detail' element={<EncyclopediaDetail />} />
+        <Route path='/encyclopedia-detail/:id' element={<EncyclopediaDetail />} />
       </Routes>
     </BrowserRouter>
   )
