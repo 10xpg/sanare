@@ -12,6 +12,7 @@ import Encyclopedia from './pages/encyclopedia/page'
 import { OrthodoxEncyclopediaDetail, TraditionalEncyclopediaDetail } from './pages/encyclopedia_detail/page'
 import PageNotFound from './pages/not_found/page'
 import Register from './pages/register/page'
+import ProtectRoute from './components/Secure/ProtectRoute'
 
 export default function App() {
   return (
@@ -21,16 +22,86 @@ export default function App() {
         <Route path='/' element={<Landing />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/home' element={<Home />} />
-        <Route path='/patient' element={<Patient />} />
-        <Route path='/vitals' element={<Vitals />} />
-        <Route path='/diagnosis' element={<Diagnosis />} />
-        <Route path='/recommend' element={<Recommend />} />
-        <Route path='/patient-summary/:id' element={<Report />} />
-        <Route path='/history' element={<History />} />
-        <Route path='/encyclopedia' element={<Encyclopedia />} />
-        <Route path='/encyclopedia-od-detail/:id' element={<OrthodoxEncyclopediaDetail />} />
-        <Route path='/encyclopedia-td-detail/:id' element={<TraditionalEncyclopediaDetail />} />
+        <Route
+          path='/home'
+          element={
+            <ProtectRoute>
+              <Home />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path='/patient'
+          element={
+            <ProtectRoute>
+              <Patient />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path='/vitals'
+          element={
+            <ProtectRoute>
+              <Vitals />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path='/diagnosis'
+          element={
+            <ProtectRoute>
+              <Diagnosis />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path='/recommend'
+          element={
+            <ProtectRoute>
+              <Recommend />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path='/patient-summary/:id'
+          element={
+            <ProtectRoute>
+              <Report />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path='/history'
+          element={
+            <ProtectRoute>
+              <History />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path='/encyclopedia'
+          element={
+            <ProtectRoute>
+              <Encyclopedia />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path='/encyclopedia-od-detail/:id'
+          element={
+            <ProtectRoute>
+              <OrthodoxEncyclopediaDetail />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path='/encyclopedia-td-detail/:id'
+          element={
+            <ProtectRoute>
+              <TraditionalEncyclopediaDetail />
+            </ProtectRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )

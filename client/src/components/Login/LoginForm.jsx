@@ -13,8 +13,6 @@ export const LoginForm = () => {
   const navigate = useNavigate()
   const [form, setForm] = useState(init)
 
-  console.log(form)
-
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm({ ...form, [name]: value })
