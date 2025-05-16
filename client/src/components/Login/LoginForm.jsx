@@ -24,7 +24,6 @@ export const LoginForm = () => {
       const res = await api.post('/auth/login', form, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       })
-      console.log(res.data)
       if (res.status === 404) return
       localStorage.clear()
       localStorage.setItem('access', res.data.access_token)
