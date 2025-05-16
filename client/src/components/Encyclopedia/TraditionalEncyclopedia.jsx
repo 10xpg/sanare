@@ -7,18 +7,22 @@ import api from '../../api/client'
 export const TraditionalEncyclopedia = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState([])
+  const [error, setError] = useState(null)
 
-  console.log(searchTerm)
   const handleSearchTermChange = (e) => {
     setSearchTerm(e.target.value)
   }
 
   const handleTraditionalDrugSearch = async () => {
-    const res = await api.get(`/encyclopedia/traditional/name/${searchTerm}`)
-    setSearchResults(res.data)
+    try {
+      const res = await api.get(`/encyclopedia/traditional/name/${searchTerm}`)
+      setSearchResults(res.data)
+      setError(null)
+    } catch (error) {
+      setSearchResults([])
+      setError(error)
+    }
   }
-
-  console.log(searchResults)
 
   return (
     <div className='bg-black text-white font-mono pt-16 px-32'>
@@ -34,7 +38,7 @@ export const TraditionalEncyclopedia = () => {
         <hr />
         <DrugsHeader />
         <hr />
-        <TraditionalDrugsItem results={searchResults} />
+        <TraditionalDrugsItem results={searchResults} err={error} />
         <hr />
       </div>
     </div>

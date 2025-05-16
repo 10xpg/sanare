@@ -7,17 +7,22 @@ import api from '../../api/client'
 export const OrthodoxEncyclopedia = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState([])
+  const [error, setError] = useState(null)
 
   const handleSearchTermChange = (e) => {
     setSearchTerm(e.target.value)
   }
 
   const handleOrthodoxDrugSearch = async () => {
-    const res = await api.get(`/encyclopedia/orthodox/name/${searchTerm}`)
-    setSearchResults(res.data)
+    try {
+      const res = await api.get(`/encyclopedia/orthodox/name/${searchTerm}`)
+      setSearchResults(res.data)
+      setError(null)
+    } catch (error) {
+      setSearchResults([])
+      setError(error)
+    }
   }
-
-  console.log(searchResults)
 
   return (
     <div className='bg-black text-white font-mono pt-16 px-32'>
@@ -33,7 +38,7 @@ export const OrthodoxEncyclopedia = () => {
         <hr />
         <DrugsHeader />
         <hr />
-        <OrthodoxDrugsItem results={searchResults} />
+        <OrthodoxDrugsItem results={searchResults} err={error} />
         <hr />
       </div>
     </div>
