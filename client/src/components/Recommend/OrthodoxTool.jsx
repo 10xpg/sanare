@@ -11,11 +11,6 @@ export const OrthodoxRecommender = ({ getDrugs, drugs, state }) => {
     getDrugs()
   }
 
-  console.log(state.ods)
-  console.log(drugs)
-
-  console.dir(`drugs length: ${drugs}`, { depth: null })
-
   return (
     <div className='text-xl pt-10'>
       <label className='flex items-center justify-between pr-10'>
@@ -30,12 +25,12 @@ export const OrthodoxRecommender = ({ getDrugs, drugs, state }) => {
             className='p-3 w-8/12 h-auto rounded-xl placeholder-[#999EA4] text-center text-black  outline-black'
           >
             <option value='' disabled className='border-b-2'>
-              ---Orthodox Drugs---
+              --- Orthodox Drugs ---
             </option>
 
             {drugs
               .flat()
-              .filter((d) => d !== null)
+              .filter((d) => d)
               .map((d) => (
                 <option key={d._id} value={d.drug_name} className='p-2'>
                   {d.drug_name}

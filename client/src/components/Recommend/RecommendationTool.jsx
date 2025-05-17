@@ -26,8 +26,8 @@ export const RecommendationTool = () => {
     const fetchConditions = async () => {
       try {
         const [diagnosis, patient] = await Promise.all([api.get(`/diagnosis/${diagnosisId}`), api.get(`/patient/${patientId}`)])
-        setPatient((p) => ({ ...p, ...patient.data }))
-        setConditions((c) => [...c, ...diagnosis.data.condition])
+        setPatient(patient.data)
+        setConditions(diagnosis.data.condition)
       } catch (error) {
         setError(error)
       }
@@ -41,7 +41,7 @@ export const RecommendationTool = () => {
       try {
         const responses = await Promise.all(conditions.map((c) => api.get(`/recommendation/traditional-drugs/${c}`)))
         const trads = responses.map((res) => res.data)
-        setTraditional((t) => [...t, ...trads])
+        setTraditional(trads)
       } catch (err) {
         setError(err)
       }
@@ -56,8 +56,9 @@ export const RecommendationTool = () => {
         const responses = await Promise.all(
           conditions.map((c) => api.get(`/recommendation/orthodox-drugs/${c}`, { params: { age: calculateAge(patient.dob) } }))
         )
+        console.log(conditions)
         const orths = responses.map((res) => res.data)
-        setOrthodox((o) => [...o, ...orths])
+        setOrthodox(orths)
       } catch (err) {
         setError(err)
       }
