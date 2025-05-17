@@ -12,12 +12,45 @@ from recommendation.schemas import (
     ReportBase,
     VitalsBase,
     RecommendationBase,
+    PredictedDrugDisplay,
 )
 from fastapi import HTTPException, status
 from user.utils import ConvertId
 from pymongo import ReturnDocument
 import re
-from model.model import predictor
+import getpass
+import os
+from langchain.chat_models import init_chat_model
+import json
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.prompts import PromptTemplate
+from bson import ObjectId
+
+if not os.environ.get("GOOGLE_API_KEY"):
+    os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter API key for Google Gemini: ")
+
+TEMPLATE = """
+You are a drug recommendation tool called “sanare”.
+ Given a patient's condition and age, return a JSON object with an orthodox_drugs array consisitng of multiple suitable drugs.
+ \n\n{format_instructions}\n\n Condition: {condition}, Age: {age}. 
+ Ensure recommendations are age-appropriate and medically sound.
+ sample Response:
+```
+{{
+  "orthodox_drugs": [
+    {{
+      "drug_name": "Omeprazole",
+      "dosage": "10-20 mg once daily before meals for 4-8 weeks",
+      "composition": "Omeprazole magnesium",
+      "instructions": "Take on an empty stomach, preferably 30 minutes before breakfast. Do not crush or chew the capsules. Complete the full course as prescribed.",
+      "category": "Proton pump inhibitor (PPI)",
+      "effectiveness": "Highly effective for reducing gastric acid and treating ulcers or gastritis",
+      "side_effects": ["Headache", "Nausea", "Abdominal pain", "Diarrhea"]
+    }},
+  ]
+}}
+```
+ """
 
 
 class PatientService:
@@ -238,7 +271,15 @@ class RecommendationService:
         self.collection = database.recommendations
         self.traditionaldrugs = database.traditional_drugs
         self.orthodoxdrugs = database.orthodox_drugs
-        self.predicteddrugs = database.predicted_drugs
+        self.model = init_chat_model("gemini-2.0-flash", model_provider="google_genai")
+        self.parser = JsonOutputParser(pydantic_object=PredictedDrugDisplay)
+        self.prompt = PromptTemplate(
+            template=TEMPLATE,
+            input_variables=["condition", "age"],
+            partial_variables={
+                "format_instructions": self.parser.get_format_instructions()
+            },
+        )
 
     async def create_recommendation(
         self,
@@ -294,11 +335,16 @@ class RecommendationService:
         ).to_list(None)
         for td in recommendations:
             td["_id"] = ConvertId.to_StringId(td["_id"])
-
         return recommendations
 
-    async def get_orthodox_recommendations(condition: str, age: int | str):
-        recommendations = []
-        prediction = predictor(age, condition)
-        recommendations.append(prediction)
+    async def get_orthodox_recommendations(self, condition: str, age: int | str):
+        prediction = await self.diagnose(condition, age)
+        recommendations = [p for p in prediction["orthodox_drugs"]]
         return recommendations
+
+    # recommender model
+    async def diagnose(self, condition: str, age: int | str):
+        prompt = self.prompt.invoke({"age": age, "condition": condition})
+        response = self.model.invoke(prompt)
+        # print(json.loads(response.content.replace("`", "").replace("json", "")))
+        return json.loads(str(response.content).replace("`", "").replace("json", ""))

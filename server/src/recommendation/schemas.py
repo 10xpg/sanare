@@ -91,7 +91,25 @@ class PredictedDrugBase(BaseModel):
 
 
 class PredictedDrugDisplay(BaseModel):
-    drug_name: str | None
-    category: str | None
-    effectiveness: str | None
-    side_effect: str | None
+    id: str = Field(alias="_id")
+    drug_name: str | None = Field(
+        description="The name of the recommended orthodox drug, e.g., 'Omeprazole'. Leave null if no drug is recommended."
+    )
+    category: str | None = Field(
+        description="The pharmacological category of the drug, such as 'Analgesic', 'Antibiotic', or 'Proton pump inhibitor'."
+    )
+    effectiveness: str | None = Field(
+        description="A short explanation of how effective this drug is for the given condition, especially for the specified age group."
+    )
+    side_effect: list[str] = Field(
+        description="A list of common or notable side effects caused by the drug, e.g., ['Nausea', 'Drowsiness']."
+    )
+    composition: str = Field(
+        description="The active pharmaceutical ingredient(s) in the drug, such as 'Omeprazole magnesium'."
+    )
+    dosage: str = Field(
+        description="The correct dosage for the patient's age, including frequency and duration. For example: '10 mg once daily for 4 weeks'."
+    )
+    instructions: str = Field(
+        description="Instructions on how to take the drug, including timing, food considerations, and other guidelines."
+    )
