@@ -44,7 +44,7 @@ export const HistorySection = () => {
           <HistoryHeader />
         </thead>
         <tbody>
-          <HistoryItem history={history} loading={loading} err={err} />
+          <HistoryItem history={history.toReversed()} loading={loading} err={err} />
         </tbody>
       </table>
     </div>

@@ -30,7 +30,7 @@ export const OrthodoxDrugsDetail = () => {
 
   return (
     <div className='bg-black text-white font-mono pt-16 px-32'>
-      <div className='font-medium uppercase text-2xl pb-6'>{drug.name}</div>
+      <div className='font-medium uppercase text-2xl pb-6 text-[#4D9245]'>{drug.name}</div>
       <hr />
       <div className='text-white flex flex-col gap-10'>
         <hr />
@@ -68,7 +68,7 @@ export const TraditionalDrugsDetail = () => {
 
   return (
     <div className='bg-black text-white font-mono pt-16 px-32'>
-      <div className='font-medium uppercase text-2xl pb-6'>{drug.product_name}</div>
+      <div className='font-medium uppercase text-2xl pb-6 text-[#4D9245]'>{drug.product_name}</div>
       <hr />
       <div className='text-white flex flex-col gap-10'>
         <hr />

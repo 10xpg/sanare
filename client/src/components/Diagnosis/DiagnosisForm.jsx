@@ -206,7 +206,7 @@ export const DiagnosisForm = () => {
         <div className='flex justify-end pt-16'>
           <button
             type='submit'
-            className='bg-white text-black w-1/5  px-4 py-2 rounded-3xl hover:bg-[#999EA4] hover:text-white outline-black'
+            className='bg-white text-black w-1/5  px-4 py-2 rounded-3xl hover:bg-[#4D9245] hover:text-white outline-black'
           >
             Submit
           </button>
@@ -216,5 +216,4 @@ export const DiagnosisForm = () => {
   )
 }
 
-// TODO: work on form ui / styling
 // TODO: restrict allowable file types

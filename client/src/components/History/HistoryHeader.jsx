@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export const HistoryHeader = () => {
   return (
-    <tr className=' '>
+    <tr className='text-[#4D9245]'>
       <th className='border p-3'>
         <span className='flex gap-3 justify-center items-center'>
           <FontAwesomeIcon icon={faFile} />

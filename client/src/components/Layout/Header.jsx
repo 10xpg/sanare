@@ -17,7 +17,7 @@ const Logout = () => {
 
 export const Header = () => {
   return (
-    <div className='bg-black border-b-4 border-white py-6 px-5 flex items-center justify-between'>
+    <div className='bg-black border-b-4 border-[#A7A9AB] py-6 px-5 flex items-center justify-between'>
       <Logo />
       <Logout />
     </div>

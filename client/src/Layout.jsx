@@ -3,7 +3,7 @@ import { Footer, Header, SideBar } from './components/Layout'
 
 export default function Layout({ children }) {
   return (
-    <div>
+    <div className='bg-[#A7A9AB]'>
       <Header />
       <div className='flex'>
         <SideBar />

@@ -212,7 +212,7 @@ export const PatientForm = () => {
         <div className='flex justify-end py-20'>
           <button
             type='submit'
-            className=' bg-white text-black w-2/12 px-4 py-2 rounded-3xl text-center  hover:bg-[#999EA4] hover:text-white '
+            className=' bg-white text-black w-2/12 px-4 py-2 rounded-3xl text-center  hover:bg-[#4D9245] hover:text-white '
           >
             Create
           </button>
