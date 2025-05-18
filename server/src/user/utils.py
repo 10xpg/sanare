@@ -7,7 +7,7 @@ from pydantic_core import core_schema
 # Converts ObjectId to string and vise versa
 class ConvertId:
     @staticmethod
-    def to_ObjectId(id: str):
+    def to_object_id(id: str | Any):
         try:
             return ObjectId(id)
         except Exception:
@@ -17,12 +17,12 @@ class ConvertId:
             )
 
     @staticmethod
-    def to_StringId(id: ObjectId):
+    def to_string_id(id: ObjectId | Any):
         return str(id)
 
 
-# PyObjectId implementation from Stack Overflow
 class PyObjectId(ObjectId):
+    # PyObjectId implementation from Stack Overflow
     @classmethod
     def __get_validators__(cls):
         yield cls.validate

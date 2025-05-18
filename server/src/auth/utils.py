@@ -12,10 +12,10 @@ serializer = URLSafeTimedSerializer(secret_key=SECRET_KEY, salt="email-verificat
 
 
 class Hash:
-    def bcrypt(plain_password):
+    def bcrypt(plain_password: str):
         return pwd_context.hash(plain_password)
 
-    def verify(plain_password, hash_password):
+    def verify(plain_password: str, hash_password: str):
         return pwd_context.verify(plain_password, hash_password)
 
 

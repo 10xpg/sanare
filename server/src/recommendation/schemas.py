@@ -19,6 +19,10 @@ class PatientRes(PatientBase):
     id: str = Field(alias="_id")
 
 
+class PatientCount(BaseModel):
+    patients: int | str
+
+
 class VitalsBase(BaseModel):
     patient: str
     weight: Annotated[float, Field(ge=0, le=610)]
@@ -67,6 +71,10 @@ class ReportRes(ReportBase):
     created_at: datetime
 
 
+class LastSeenCount(BaseModel):
+    last_seen: int | str
+
+
 class RecommendationBase(BaseModel):
     doctor: str
     patient: str
@@ -75,6 +83,10 @@ class RecommendationBase(BaseModel):
     recommended_orthodox_drug: list[Any]
     recommended_by_doctor: list[str]
     recommended_traditional_drug: list[Any]
+
+
+class RecommendationCount(BaseModel):
+    recommendations: int | str
 
 
 class TraditionalDrugDisplay(BaseModel):

@@ -15,8 +15,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 class JWTUtils:
-    def __init__(self):
-        pass
 
     @staticmethod
     def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -48,7 +46,7 @@ class JWTUtils:
         except JWTError:
             raise credentials_exception
 
-        user = UserService(db).get_user_by_UserId(user_id)
+        user = UserService(db).get_user_by_user_id(user_id)
         if user is None:
             raise credentials_exception
         return user

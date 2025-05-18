@@ -39,26 +39,26 @@ async def get_all_users(
     "/identification/{user_id}",
     response_model=UserDisplay,
 )
-async def get_user_by_UserId(
+async def get_user_by_user_id(
     user_id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
     # current_user: UserBase = Depends(JWTUtils.get_current_user),
     # is_verified_only: bool = Depends(is_verified),
 ):
-    return await UserService(db).get_user_by_UserId(user_id)
+    return await UserService(db).get_user_by_user_id(user_id)
 
 
 @user_router.get(
     "/{_id}",
     response_model=UserDisplay,
 )
-async def get_user_by_ObjectId(
+async def get_user_by_object_id(
     _id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
     # current_user: UserBase = Depends(JWTUtils.get_current_user),
     # is_verified_only: bool = Depends(is_verified),
 ):
-    return await UserService(db).get_user_by_ObjectId(_id)
+    return await UserService(db).get_user_by_object_id(_id)
 
 
 @user_router.put(

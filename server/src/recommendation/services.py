@@ -24,7 +24,8 @@ from langchain.chat_models import init_chat_model
 import json
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import PromptTemplate
-from bson import ObjectId
+from datetime import datetime, timedelta
+
 
 if not os.environ.get("GOOGLE_API_KEY"):
     os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter API key for Google Gemini: ")
@@ -72,7 +73,7 @@ class PatientService:
         created_patient = await self.collection.find_one(
             {"_id": new_patient.inserted_id}
         )
-        created_patient["_id"] = ConvertId.to_StringId(created_patient["_id"])
+        created_patient["_id"] = ConvertId.to_string_id(created_patient["_id"])
         if not created_patient:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -83,14 +84,14 @@ class PatientService:
     async def get_all_patients(self):
         patients = await self.collection.find().to_list(None)
         for patient in patients:
-            patient["_id"] = ConvertId.to_StringId(patient["_id"])
+            patient["_id"] = ConvertId.to_string_id(patient["_id"])
         return patients
 
-    async def get_patient_by_ObjectId(self, object_id: str):
+    async def get_patient_by_object_id(self, object_id: str):
         patient = await self.collection.find_one(
-            {"_id": ConvertId.to_ObjectId(object_id)}
+            {"_id": ConvertId.to_object_id(object_id)}
         )
-        patient["_id"] = ConvertId.to_StringId(patient["_id"])
+        patient["_id"] = ConvertId.to_string_id(patient["_id"])
         if not patient:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -100,7 +101,7 @@ class PatientService:
 
     async def update_patient(self, object_id: str, request: PatientBase):
         patient = await self.collection.find_one_and_update(
-            {"_id": ConvertId.to_ObjectId(object_id)},
+            {"_id": ConvertId.to_object_id(object_id)},
             {"$set": request.model_dump(exclude_unset=True)},
             return_document=ReturnDocument.AFTER,
         )
@@ -113,7 +114,7 @@ class PatientService:
 
     async def delete_patient(self, object_id: str):
         patient = await self.collection.find_one_and_delete(
-            {"_id": ConvertId.to_ObjectId(object_id)}
+            {"_id": ConvertId.to_object_id(object_id)}
         )
         if not patient:
             raise HTTPException(
@@ -127,6 +128,10 @@ class PatientService:
             },
         )
 
+    async def patient_count(self):
+        count = await self.collection.count_documents({})
+        return {"patients": count}
+
 
 class VitalsService:
     def __init__(self, database: AsyncIOMotorDatabase):
@@ -134,12 +139,12 @@ class VitalsService:
 
     async def create_vitals(self, patient_id: str, request: VitalsBase):
         vitals_base = request.model_dump()
-        vitals_base["patient"] = ConvertId.to_ObjectId(patient_id)
+        vitals_base["patient"] = ConvertId.to_object_id(patient_id)
         db_vitals_create = DbVitals(**vitals_base)
         db_vitals = db_vitals_create.model_dump(by_alias=True)
         new_vitals = await self.collection.insert_one(db_vitals)
         created_vitals = await self.collection.find_one({"_id": new_vitals.inserted_id})
-        created_vitals["_id"] = ConvertId.to_StringId(created_vitals["_id"])
+        created_vitals["_id"] = ConvertId.to_string_id(created_vitals["_id"])
         if not created_vitals:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -148,9 +153,9 @@ class VitalsService:
         created_vitals["patient"] = patient_id
         return created_vitals
 
-    async def get_vitals_by_ObjectId(self, object_id: str):
+    async def get_vitals_by_object_id(self, object_id: str):
         vitals = await self.collection.find_one(
-            {"_id": ConvertId.to_ObjectId(object_id)}
+            {"_id": ConvertId.to_object_id(object_id)}
         )
         if not vitals:
             raise HTTPException(
@@ -169,9 +174,9 @@ class DiagnosisService:
         self, patient_id: str, doctor_id: str, vitals_id: str, request: DiagnosisBase
     ):
         diagnosis_base = request.model_dump()
-        diagnosis_base["patient"] = ConvertId.to_ObjectId(patient_id)
-        diagnosis_base["doctor"] = ConvertId.to_ObjectId(doctor_id)
-        diagnosis_base["vitals"] = ConvertId.to_ObjectId(vitals_id)
+        diagnosis_base["patient"] = ConvertId.to_object_id(patient_id)
+        diagnosis_base["doctor"] = ConvertId.to_object_id(doctor_id)
+        diagnosis_base["vitals"] = ConvertId.to_object_id(vitals_id)
         db_diagnosis_create = DbDiagnosis(**diagnosis_base)
         db_diagnosis = db_diagnosis_create.model_dump(by_alias=True)
 
@@ -190,9 +195,9 @@ class DiagnosisService:
         created_diagnosis["vitals"] = vitals_id
         return created_diagnosis
 
-    async def get_diagnosis_by_ObjectId(self, object_id: str):
+    async def get_diagnosis_by_object_id(self, object_id: str):
         diagnosis = await self.collection.find_one(
-            {"_id": ConvertId.to_ObjectId(object_id)}
+            {"_id": ConvertId.to_object_id(object_id)}
         )
         if not diagnosis:
             raise HTTPException(
@@ -219,9 +224,9 @@ class ReportService:
         request: ReportBase,
     ):
         report_base = request.model_dump()
-        report_base["patient"] = ConvertId.to_ObjectId(patient_id)
-        report_base["doctor"] = ConvertId.to_ObjectId(doctor_id)
-        report_base["diagnosis"] = ConvertId.to_ObjectId(diagnosis_id)
+        report_base["patient"] = ConvertId.to_object_id(patient_id)
+        report_base["doctor"] = ConvertId.to_object_id(doctor_id)
+        report_base["diagnosis"] = ConvertId.to_object_id(diagnosis_id)
         db_report_create = DbReport(**report_base)
         db_report = db_report_create.model_dump(by_alias=True)
         new_report = await self.collection.insert_one(db_report)
@@ -246,12 +251,22 @@ class ReportService:
             report["doctor"] = str(report["doctor"])
             report["diagnosis"] = str(report["diagnosis"])
             report["created_at"] = str(report["created_at"])
-
         return reports
 
-    async def get_report_by_ObjectId(self, object_id: str):
+    async def count_last_seen(self, doctor_id: str):
+        today = datetime.now()
+        seven_days_ago = today - timedelta(days=7)
+        count = await self.collection.count_documents(
+            {
+                "created_at": {"$gte": seven_days_ago, "$lte": today},
+                "doctor": ConvertId.to_object_id(doctor_id),
+            }
+        )
+        return {"last_seen": count}
+
+    async def get_report_by_object_id(self, object_id: str):
         report = await self.collection.find_one(
-            {"_id": ConvertId.to_ObjectId(object_id)}
+            {"_id": ConvertId.to_object_id(object_id)}
         )
         if not report:
             raise HTTPException(
@@ -290,10 +305,10 @@ class RecommendationService:
         request: RecommendationBase,
     ):
         recommendation_base = request.model_dump()
-        recommendation_base["patient"] = ConvertId.to_ObjectId(patient_id)
-        recommendation_base["doctor"] = ConvertId.to_ObjectId(doctor_id)
-        recommendation_base["vitals"] = ConvertId.to_ObjectId(vitals_id)
-        recommendation_base["diagnosis"] = ConvertId.to_ObjectId(diagnosis_id)
+        recommendation_base["patient"] = ConvertId.to_object_id(patient_id)
+        recommendation_base["doctor"] = ConvertId.to_object_id(doctor_id)
+        recommendation_base["vitals"] = ConvertId.to_object_id(vitals_id)
+        recommendation_base["diagnosis"] = ConvertId.to_object_id(diagnosis_id)
         db_recommendation_create = DbRecommendation(**recommendation_base)
         db_recommendation = db_recommendation_create.model_dump(by_alias=True)
         new_recommendation = await self.collection.insert_one(db_recommendation)
@@ -311,9 +326,15 @@ class RecommendationService:
         created_recommendation["diagnosis"] = diagnosis_id
         return created_recommendation
 
-    async def get_recommendation_by_ObjectId(self, object_id: str):
+    async def recommendation_count(self, doctor_id: str):
+        count = await self.collection.count_documents(
+            {"doctor": ConvertId.to_object_id(doctor_id)}
+        )
+        return {"recommendations": count}
+
+    async def get_recommendation_by_object_id(self, object_id: str):
         recommendation = await self.collection.find_one(
-            {"_id": ConvertId.to_ObjectId(object_id)}
+            {"_id": ConvertId.to_object_id(object_id)}
         )
         if not recommendation:
             raise HTTPException(
@@ -334,17 +355,16 @@ class RecommendationService:
             {"disease_indications": {"$regex": pattern, "$options": "i"}}
         ).to_list(None)
         for td in recommendations:
-            td["_id"] = ConvertId.to_StringId(td["_id"])
-        return recommendations
-
-    async def get_orthodox_recommendations(self, condition: str, age: int | str):
-        prediction = await self.diagnose(condition, age)
-        recommendations = [p for p in prediction["orthodox_drugs"]]
+            td["_id"] = ConvertId.to_string_id(td["_id"])
         return recommendations
 
     # recommender model
     async def diagnose(self, condition: str, age: int | str):
         prompt = self.prompt.invoke({"age": age, "condition": condition})
         response = self.model.invoke(prompt)
-        # print(json.loads(response.content.replace("`", "").replace("json", "")))
         return json.loads(str(response.content).replace("`", "").replace("json", ""))
+
+    async def get_orthodox_recommendations(self, condition: str, age: int | str):
+        prediction = await self.diagnose(condition, age)
+        recommendations = [p for p in prediction["orthodox_drugs"]]
+        return recommendations

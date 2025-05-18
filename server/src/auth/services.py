@@ -56,7 +56,7 @@ class AuthService:
         return {
             "access_token": access_token,
             "token_type": "bearer",
-            "object_id": ConvertId.to_StringId(user["_id"]),
+            "object_id": ConvertId.to_string_id(user["_id"]),
             "user_id": user["username"],
             "role": user["role"],
             "is_verified": user["is_email_verified"],
@@ -81,7 +81,7 @@ class AuthService:
             },
             return_document=ReturnDocument.AFTER,
         )
-        user["_id"] = ConvertId.to_StringId(user["_id"])
+        user["_id"] = ConvertId.to_string_id(user["_id"])
 
         return {
             "message": "Email Verification Successful ✅",
@@ -144,15 +144,11 @@ class AuthService:
 
 
 class AuthMailService:
-    def __init__(self):
-        pass
-
     @staticmethod
     async def send_mail(request: EmailModel):
         emails = request.addresses
         subject = "Welcome to Sanare"
         html = "<h1>Welcome to Sanare</h1>"
-
         message = create_message(
             recipients=emails,
             subject=subject,

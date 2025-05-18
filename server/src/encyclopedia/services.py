@@ -1,6 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from user.utils import ConvertId
 from fastapi import HTTPException, status
+from typing import Any
 
 regex = "$regex"
 options = "$options"
@@ -18,14 +19,14 @@ class EncyclopediaService:
     ):
         orthodox_drugs = (
             await self.orthodox_collection.find(
-                {"_id": {"$gt": ConvertId.to_ObjectId(last_id)}} if last_id else {}
+                {"_id": {"$gt": ConvertId.to_object_id(last_id)}} if last_id else {}
             )
             .sort("_id", 1)
             .limit(limit)
             .to_list(length=limit)
         )
         for od in orthodox_drugs:
-            od["_id"] = ConvertId.to_StringId(od["_id"])
+            od["_id"] = ConvertId.to_string_id(od["_id"])
         if orthodox_drugs:
             next_last_id = str(orthodox_drugs[-1]["_id"])
         else:
@@ -39,20 +40,25 @@ class EncyclopediaService:
     async def get_traditional_drugs(
         self,
         # query: str,
+        limit: int | Any,
     ):
-        traditional_drugs = await self.traditional_collection.find(
-            # {"$text": {"$search": query}}
-        ).to_list(None)
+        traditional_drugs = (
+            await self.traditional_collection.find(
+                # {"$text": {"$search": query}}
+            )
+            .sort("_id,1")
+            .limit(limit)
+            .to_list(length=limit)
+        )
 
         for d in traditional_drugs:
-            d["_id"] = ConvertId.to_StringId(d["_id"])
-            print(d)
+            d["_id"] = ConvertId.to_string_id(d["_id"])
 
         return traditional_drugs
 
     async def get_orthodox_drug(self, object_id: str):
         od = await self.orthodox_collection.find_one(
-            {"_id": ConvertId.to_ObjectId(object_id)}
+            {"_id": ConvertId.to_object_id(object_id)}
         )
         if not od:
             raise HTTPException(
@@ -60,12 +66,12 @@ class EncyclopediaService:
                 detail={"detail": f"Orthodox drug with id '{object_id}' not found"},
             )
 
-        od["_id"] = ConvertId.to_StringId(od["_id"])
+        od["_id"] = ConvertId.to_string_id(od["_id"])
         return od
 
     async def get_traditional_drug(self, object_id: str):
         td = await self.traditional_collection.find_one(
-            {"_id": ConvertId.to_ObjectId(object_id)}
+            {"_id": ConvertId.to_object_id(object_id)}
         )
         if not td:
             raise HTTPException(
@@ -73,7 +79,7 @@ class EncyclopediaService:
                 detail={"detail": f"Traditional drug with id '{object_id}' not found"},
             )
 
-        td["_id"] = ConvertId.to_StringId(td["_id"])
+        td["_id"] = ConvertId.to_string_id(td["_id"])
         return td
 
     async def get_orthodox_drug_by_name(self, drug: str):
@@ -92,7 +98,7 @@ class EncyclopediaService:
                 detail={"detail": f"Orthodox drug with name '{drug}' not found"},
             )
 
-        orthodox_drug_res["_id"] = ConvertId.to_StringId(orthodox_drug_res["_id"])
+        orthodox_drug_res["_id"] = ConvertId.to_string_id(orthodox_drug_res["_id"])
         return orthodox_drug_res
 
     async def get_traditional_drug_by_name(self, drug: str):
@@ -105,5 +111,7 @@ class EncyclopediaService:
                 detail={"detail": f"Traditional drug with name '{drug}' not found"},
             )
 
-        traditional_drug_res["_id"] = ConvertId.to_StringId(traditional_drug_res["_id"])
+        traditional_drug_res["_id"] = ConvertId.to_string_id(
+            traditional_drug_res["_id"]
+        )
         return traditional_drug_res

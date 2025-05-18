@@ -35,7 +35,7 @@ async def get_orthodox_drug_by_name(
 
 
 @encyclopedia_router.get("/orthodox/{_id}", response_model=OrthodoxDrugs)
-async def get_orthodox_drug_by_ObjectId(
+async def get_orthodox_drug_by_object_id(
     _id: str, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     return await EncyclopediaService(db).get_orthodox_drug(_id)
@@ -47,8 +47,12 @@ async def get_orthodox_drug_by_ObjectId(
 async def get_all_traditional_drugs(
     # query: str | None = None,
     db: AsyncIOMotorDatabase = Depends(get_db),
+    limit: Annotated[int, Query()] = 0,
 ):
-    return await EncyclopediaService(db).get_traditional_drugs()
+    if limit == 0 or limit == None:
+        return await EncyclopediaService(db).get_traditional_drugs(limit=955)
+
+    return await EncyclopediaService(db).get_traditional_drugs(limit)
 
 
 @encyclopedia_router.get(
@@ -61,7 +65,7 @@ async def get_traditional_drug_by_name(
 
 
 @encyclopedia_router.get("/traditional/{_id}", response_model=TraditionalDrugsDisplay)
-async def get_traditional_drug_by_ObjectId(
+async def get_traditional_drug_by_object_id(
     _id: str, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     return await EncyclopediaService(db).get_traditional_drug(_id)

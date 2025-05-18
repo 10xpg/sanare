@@ -2,13 +2,16 @@ from fastapi import APIRouter, Depends, UploadFile, File, status
 from recommendation.schemas import (
     PatientBase,
     PatientRes,
+    PatientCount,
     DiagnosisBase,
     DiagnosisRes,
     VitalsBase,
     VitalsRes,
     ReportBase,
     ReportRes,
+    LastSeenCount,
     RecommendationBase,
+    RecommendationCount,
     TraditionalDrugDisplay,
     PredictedDrugDisplay,
 )
@@ -47,11 +50,16 @@ async def get_all_patients(db: AsyncIOMotorDatabase = Depends(get_db)):
     return await PatientService(db).get_all_patients()
 
 
+@patient_router.get("/count", response_model=PatientCount)
+async def count_patients(db: AsyncIOMotorDatabase = Depends(get_db)):
+    return await PatientService(db).patient_count()
+
+
 @patient_router.get("/{patient_id}", response_model=PatientBase)
-async def get_patient_by_ObjectId(
+async def get_patient_by_object_id(
     patient_id: str, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
-    return await PatientService(db).get_patient_by_ObjectId(patient_id)
+    return await PatientService(db).get_patient_by_object_id(patient_id)
 
 
 @patient_router.put(
@@ -86,7 +94,7 @@ async def get_vitals_by_object_id(
     vitals_id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
-    return await VitalsService(db).get_vitals_by_ObjectId(vitals_id)
+    return await VitalsService(db).get_vitals_by_object_id(vitals_id)
 
 
 diagnosis_router = APIRouter(
@@ -131,7 +139,7 @@ async def get_diagnosis_by_object_id(
     diagnosis_id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
-    return await DiagnosisService(db).get_diagnosis_by_ObjectId(diagnosis_id)
+    return await DiagnosisService(db).get_diagnosis_by_object_id(diagnosis_id)
 
 
 report_router = APIRouter(
@@ -161,12 +169,19 @@ async def get_all_reports(
     return await ReportService(db).get_all_reports()
 
 
+@report_router.get("/last-seen", response_model=LastSeenCount)
+async def seen_within_last_week(
+    doctor_id: str, db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    return await ReportService(db).count_last_seen(doctor_id)
+
+
 @report_router.get("/{report_id}", response_model=ReportRes)
 async def get_report_by_object_id(
     report_id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
-    return await ReportService(db).get_report_by_ObjectId(report_id)
+    return await ReportService(db).get_report_by_object_id(report_id)
 
 
 recommendation_router = APIRouter(
@@ -194,12 +209,19 @@ async def recommend_drugs(
     )
 
 
+@recommendation_router.get("/count", response_model=RecommendationCount)
+async def count_recommendations(
+    doctor_id: str, db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    return await RecommendationService(db).recommendation_count(doctor_id)
+
+
 @recommendation_router.get("/{recommendation_id}", response_model=RecommendationBase)
 async def get_recommendation_by_object_id(
     recommendation_id: str,
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
-    return await RecommendationService(db).get_recommendation_by_ObjectId(
+    return await RecommendationService(db).get_recommendation_by_object_id(
         recommendation_id
     )
 

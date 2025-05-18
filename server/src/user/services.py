@@ -41,7 +41,7 @@ class UserService:
         # new_user is an insertOneResult which is just the objectid of the new user
         # we use that id to find and return the new user
         created_user = await self.collection.find_one({"_id": new_user.inserted_id})
-        created_user["_id"] = ConvertId.to_StringId(created_user["_id"])
+        created_user["_id"] = ConvertId.to_string_id(created_user["_id"])
 
         ################################################################################################
         # Email Verification
@@ -74,27 +74,29 @@ class UserService:
     async def get_all_users(self):
         users = await self.collection.find().to_list(None)
         for user in users:
-            user["_id"] = ConvertId.to_StringId(user["_id"])
+            user["_id"] = ConvertId.to_string_id(user["_id"])
         return users
 
-    async def get_user_by_ObjectId(self, object_id: str):
-        user = await self.collection.find_one({"_id": ConvertId.to_ObjectId(object_id)})
+    async def get_user_by_object_id(self, object_id: str):
+        user = await self.collection.find_one(
+            {"_id": ConvertId.to_object_id(object_id)}
+        )
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"User with _id '{object_id}' not found"},
             )
-        user["_id"] = ConvertId.to_StringId(user["_id"])
+        user["_id"] = ConvertId.to_string_id(user["_id"])
         return user
 
-    async def get_user_by_UserId(self, user_id: str):
+    async def get_user_by_user_id(self, user_id: str):
         user = await self.collection.find_one({"username": user_id})
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"User with user_id '{user_id}' not found"},
             )
-        user["_id"] = ConvertId.to_StringId(user["_id"])
+        user["_id"] = ConvertId.to_string_id(user["_id"])
         return user
 
     async def get_user_by_email(self, user_email: str):
@@ -104,7 +106,7 @@ class UserService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"User with user_email '{user_email}' not found"},
             )
-        user["_id"] = ConvertId.to_StringId(user["_id"])
+        user["_id"] = ConvertId.to_string_id(user["_id"])
         return user
 
     async def update_user(self, username: str, request: UserUpdate):
@@ -124,7 +126,7 @@ class UserService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": "User not found"},
             )
-        user["_id"] = ConvertId.to_StringId(user["_id"])
+        user["_id"] = ConvertId.to_string_id(user["_id"])
         return user
 
     async def delete_user(self, username: str):
@@ -134,7 +136,7 @@ class UserService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail={"detail": f"User '{username}' not found"},
             )
-        user["_id"] = ConvertId.to_StringId(user["_id"])
+        user["_id"] = ConvertId.to_string_id(user["_id"])
         return HTTPException(
             status_code=status.HTTP_200_OK,
             detail={"detail": f"User '{username}' successfully deleted"},
