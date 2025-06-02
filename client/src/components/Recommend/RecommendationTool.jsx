@@ -22,6 +22,9 @@ export const RecommendationTool = () => {
   const [tds, setTds] = useState({})
   const [ods, setOds] = useState({})
 
+  const [odLoading, setOdLoading] = useState(false)
+  const [tdLoading, setTdLoading] = useState(false)
+
   useEffect(() => {
     const fetchConditions = async () => {
       try {
@@ -39,9 +42,11 @@ export const RecommendationTool = () => {
   const getTd = () => {
     const fetchTd = async () => {
       try {
+        setTdLoading(true)
         const responses = await Promise.all(conditions.map((c) => api.get(`/recommendation/traditional-drugs/${c}`)))
         const trads = responses.map((res) => res.data)
         setTraditional(trads)
+        setTdLoading(false)
       } catch (err) {
         setError(err)
       }
@@ -53,12 +58,14 @@ export const RecommendationTool = () => {
   const getOd = () => {
     const fetchOd = async () => {
       try {
+        setOdLoading(true)
         const responses = await Promise.all(
           conditions.map((c) => api.get(`/recommendation/orthodox-drugs/${c}`, { params: { age: calculateAge(patient.dob) } }))
         )
         console.log(conditions)
         const orths = responses.map((res) => res.data)
         setOrthodox(orths)
+        setOdLoading(false)
       } catch (err) {
         setError(err)
       }
@@ -125,11 +132,11 @@ export const RecommendationTool = () => {
     <div className='bg-black text-white font-mono pt-16 px-32'>
       <div className='font-medium uppercase text-2xl pb-6'>Recommend Drugs</div>
       <form className='text-white flex flex-col gap-14' onSubmit={handleRecFormSubmit}>
-        <OrthodoxRecommender getDrugs={getOd} drugs={orthodox} state={{ ods, setOds }} />
+        <OrthodoxRecommender getDrugs={getOd} drugs={orthodox} state={{ ods, setOds }} loading={odLoading} />
         <hr />
         <DoctorsRecommendation rec={{ handleDocRec, docRec }} />
         <hr />
-        <TraditionalRecommender getDrugs={getTd} drugs={traditional} state={{ tds, setTds }} />
+        <TraditionalRecommender getDrugs={getTd} drugs={traditional} state={{ tds, setTds }} loading={tdLoading} />
         <div className='flex justify-end py-20'>
           <button
             className=' bg-white text-black w-2/12 px-4 py-2 rounded-3xl text-center  hover:bg-[#4D9245] hover:text-white '

@@ -1,6 +1,6 @@
 import { PropTypes } from 'prop-types'
 
-export const OrthodoxRecommender = ({ getDrugs, drugs, state }) => {
+export const OrthodoxRecommender = ({ getDrugs, drugs, state, loading }) => {
   const handleChange = (e) => {
     const { name, selectedOptions } = e.target
     const vals = Array.from(selectedOptions).map((drug) => drug.value)
@@ -37,6 +37,14 @@ export const OrthodoxRecommender = ({ getDrugs, drugs, state }) => {
                 </option>
               ))}
           </select>
+        ) : loading ? (
+          <button
+            className='bg-[#589304] w-8/12 h-14 rounded-lg flex items-center justify-center gap-2 animate-pulse'
+            type='button'
+            onClick={handleGetDrugs}
+          >
+            Processing…
+          </button>
         ) : (
           <button
             className='bg-[#1ED345] w-8/12 h-14 rounded-lg  hover:bg-[#589304] duration-300 hover:font-medium '
@@ -54,5 +62,6 @@ export const OrthodoxRecommender = ({ getDrugs, drugs, state }) => {
 OrthodoxRecommender.propTypes = {
   getDrugs: PropTypes.func,
   drugs: PropTypes.array,
-  state: PropTypes.object
+  state: PropTypes.object,
+  loading: PropTypes.bool
 }
